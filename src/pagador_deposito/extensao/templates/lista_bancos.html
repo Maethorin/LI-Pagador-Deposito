@@ -1,0 +1,212 @@
+{% load filters %}
+                            <table class="table tabela-bancos">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>Banco</th>
+                                        <th>Agencia</th>
+                                        <th>Conta</th>
+                                        <th>Poupança?</th>
+                                        <th>CPF / CNPJ</th>
+                                        <th>Favorecido</th>
+                                    </tr>
+                                </thead>
+                                {% for banco in bancos %}
+                                    <tr>
+                                        <td class="image">
+                                            <a href="#editarBanco" class="editar-banco" data-toggle="modal" data-banco-id="{{ banco.id }}">
+                                                <span rel="tooltip" data-original-title="Clique aqui para editar as configurações deste banco.">
+                                                    <img src="{{ ADMIN_STATIC_URL }}img/formas-de-pagamento/{{ banco.imagem }}" alt="{{ banco.nome }}" class="banco"/>
+                                                </span>
+                                            </a>
+                                        </td>
+                                        <td class="nome" data-toggle="modal">
+                                            <a href="#editarBanco" class="editar-banco" data-toggle="modal" data-banco-id="{{ banco.id }}">
+                                                <span rel="tooltip" data-original-title="Clique aqui para editar as configurações deste banco.">
+                                                    {{ banco.codigo }} - {{ banco.nome }}
+                                                </span>
+                                            </a>
+                                        </td>
+                                        {% if banco.pagamento_banco %}
+                                        <td>{{ banco.pagamento_banco.agencia }}</td>
+                                        <td>{{ banco.pagamento_banco.numero_conta }}</td>
+                                        <td>{{ banco.pagamento_banco.poupanca|yesno:'Sim,Não' }}</td>
+                                        <td>{{ banco.pagamento_banco.cpf_cnpj|formatar_cpf_cnpj }}</td>
+                                        <td>{{ banco.pagamento_banco.favorecido }}</td>
+                                        <td>
+                                            <span class="label label-{% if banco.pagamento_banco.ativo %}success{% else %}important{% endif %}">
+                                            {% if banco.pagamento_banco.ativo %}Ativo{% else %}Inativo{% endif %}
+                                            </span>
+                                        </td>
+                                        {% else %}
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>
+                                            <span class="label label-important">
+                                                <span class="glyphicon glyphicon-cog"></span> Não configurado
+                                            </span>
+                                        </td>
+                                        {% endif %}
+                                    </tr>
+                                {% endfor %}
+                            </table>
+
+
+<div id="editarBanco" class="modal fade">
+	<div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="no-margin">Configuracoes para <span class="banco-nome"></span></h4>
+            </div>
+            <form action="" method="POST" enctype="multipart/form-data" class="form-horizontal">
+                <div class="modal-body">
+                    {% csrf_token %}
+                    <div class="box">
+                        <div class="box-header">
+                            <h3>
+                                Editar banco <span class="banco-nome"></span> para Depósito Bancário
+                            </h3>
+                        </div>
+                        <div class="box-content">
+                            <div class="form-group">
+                                <div class="col-sm-9 col-sm-offset-3">
+                                    <h4>
+                                        <img src="" alt="" class="banco-imagem" style="max-width: 40px; max-height: 40px; border-radius: 3px;">
+                                        <span class="banco-codigo"></span> - <span class="banco-nome"></span>
+                                    </h4>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="id_banco_ativo" class="control-label col-sm-3">Banco ativo?</label>
+                                <div class="col-sm-9">
+                                    <select class="form-control select_ativo" id="id_banco_ativo" name="banco_ativo" style="color: #ffffff;">
+                                        <option value="False">Não</option>
+                                        <option value="True">Sim</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="id_agencia" class="control-label col-sm-3">
+                                    Agência
+                                </label>
+                                <div class="col-sm-9">
+                                    <input class="form-control" id="id_agencia" maxlength="11" name="agencia" type="text">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="id_numero_conta" class="control-label col-sm-3">
+                                    Conta
+                                </label>
+                                <div class="col-sm-9">
+                                    <input class="form-control" id="id_numero_conta" maxlength="11" name="numero_conta" type="text">
+                                </div>
+                            </div>
+                            <div class="form-group ">
+                                <div class="col-sm-9 col-sm-offset-3">
+                                    <label class="checkbox">
+                                        <input id="id_poupanca" name="poupanca" type="checkbox">
+                                        Conta poupança?
+                                    </label>
+                                </div>
+                            </div>
+                            <div style="display: block;" class="form-group hide">
+                                <label for="id_operacao" class="control-label col-sm-3">
+                                    Operação/Variação
+                                </label>
+                                <div class="col-sm-9">
+                                    <input class="form-control" id="id_operacao" name="operacao" type="text">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="id_cpf_cnpj" class="control-label col-sm-3">
+                                    CPF ou CNPJ
+                                </label>
+                                <div class="col-sm-9">
+                                    <input class="form-control" id="id_cpf_cnpj" maxlength="18" name="cpf_cnpj" type="text">
+
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="id_favorecido" class="control-label col-sm-3">
+                                    Favorecido
+                                </label>
+                                <div class="col-sm-9">
+                                    <input class="form-control" id="id_favorecido" maxlength="256" name="favorecido" type="text">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" type="submit">
+                        <span class="glyphicon glyphicon-ok"></span>
+                        Salvar
+                    </button>
+                    <button type="button" class="button btn btn-default" data-dismiss="modal" aria-hidden="true">
+                        <span class="glyphicon glyphicon-remove"></span>
+                        Fechar
+                    </button>
+                </div>
+            </form>
+        </div>
+	</div>
+</div>
+
+<script type="application/javascript">
+    var bancos = {
+    {% for banco in bancos %}
+        'banco_{{ banco.id }}': {
+            'codigo': '{{ banco.codigo }}',
+            'nome': '{{ banco.nome }}',
+            'imagem': '{{ ADMIN_STATIC_URL }}img/formas-de-pagamento/{{ banco.imagem }}',
+            {% if banco.pagamento_banco %}
+            'configuracao': {
+                'ativo': {{ banco.pagamento_banco.ativo|lower }},
+                'agencia': "{{ banco.pagamento_banco.agencia }}",
+                'numero_conta': "{{ banco.pagamento_banco.numero_conta }}",
+                'poupanca': {{ banco.pagamento_banco.poupanca|lower }},
+                'cpf_cnpj': "{{ banco.pagamento_banco.cpf_cnpj|formatar_cpf_cnpj }}",
+                'favorecido': "{{ banco.pagamento_banco.favorecido }}"
+            }
+            {% endif %}
+        },
+    {% endfor %}
+    };
+
+    function definirValoresDeCampo(configuracao) {
+        $("#id_banco_ativo").css("background-color", (configuracao.ativo ? "green" : "red")).val((configuracao.ativo ? "True" : "False"));
+        $("#id_agencia").val(configuracao.agencia);
+        $("#id_numero_conta").val(configuracao.numero_conta);
+        $("#id_poupanca").prop("checked", configuracao.poupanca);
+        $("#id_cpf_cnpj").val(configuracao.cpf_cnpj);
+        $("#id_favorecido").val(configuracao.favorecido);
+    }
+
+    function limparCampos() {
+        $("#id_banco_ativo").css("background-color", "red").val("False");
+        $("#id_agencia").val('');
+        $("#id_numero_conta").val('');
+        $("#id_poupanca").prop("checked", false);
+        $("#id_cpf_cnpj").val('');
+        $("#id_favorecido").val('');
+    }
+
+    $('.tabela-bancos').on("click", ".editar-banco", function() {
+        limparCampos();
+        var banco_id = $(this).data("banco-id");
+        var banco = bancos["banco_" + banco_id];
+        var $modal = $("#editarBanco");
+        $modal.find(".banco-nome").text(banco.nome);
+        $modal.find(".banco-codigo").text(banco.codigo);
+        var $imagem = $modal.find(".banco-imagem");
+        $imagem.attr("alt", banco.nome);
+        $imagem.attr("src", banco.imagem);
+        if (banco.configuracao) {
+            definirValoresDeCampo(banco.configuracao);
+        }
+    });
+</script>
