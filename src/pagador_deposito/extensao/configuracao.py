@@ -2,7 +2,7 @@
 import os
 from django.db import IntegrityError
 
-from pagador.configuracao.cadastro import CampoFormulario, FormularioBase, TipoDeCampo, CadastroBase
+from pagador.configuracao.cadastro import CampoFormulario, FormularioBase, TipoDeCampo, CadastroBase, SelecaoBase
 from pagador.configuracao.cliente import Script, TipoScript
 
 
@@ -86,6 +86,7 @@ class MeioPagamentoCadastro(CadastroBase):
             cnpj = cpf_cnpj
         return cpf, cnpj
 
+
 class Formulario(FormularioBase):
     email_comprovante = CampoFormulario("usuario", u"E-mail para comprovante", requerido=False, tamanho_max=128, ordem=1)
     desconto_valor = CampoFormulario("desconto_valor", u"Desconto aplicado", requerido=False, ordem=2, tipo=TipoDeCampo.decimal)
@@ -114,20 +115,10 @@ class MeioPagamentoEnvio(object):
         ]
 
 
-class MeioPagamentoSelecao(object):
-    logo = Script(tipo=TipoScript.html, nome="logo", conteudo=u'<img src="{{ STATIC_URL }}novo-template/img/bandeiras/paypal.png" alt="Pague com PayPal" title="Pague com PayPal" />', eh_template=True)
-
-    @property
-    def bandeiras(self):
-        bandeiras = Script(tipo=TipoScript.html, nome="explicativo")
-        bandeiras.adiciona_linha('<ul class="bandeiras-pagamento">')
-        bandeiras.adiciona_linha('    <li><i class="icone-pagamento visa" title="Visa"></i></li>')
-        bandeiras.adiciona_linha('    <li><i class="icone-pagamento mastercard" title="Mastercard"></i></li>')
-        bandeiras.adiciona_linha('</ul>')
-        return bandeiras
+class MeioPagamentoSelecao(SelecaoBase):
+    selecao = Script(tipo=TipoScript.html, nome="selecao", caminho_arquivo=caminho_do_arquivo_de_template("selecao.html"), eh_template=True)
 
     def to_dict(self):
         return [
-            self.logo.to_dict(),
-            self.bandeiras.to_dict()
+            self.selecao.to_dict()
         ]
