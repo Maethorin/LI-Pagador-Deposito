@@ -3,21 +3,16 @@ var url = '';
 var $counter = null;
 var segundos = 5;
 $(function() {
-    var $payPalMensagem = $(".paypal-mensagem");
-
-    function iniciaContador() {
-        $counter = $payPalMensagem.find(".segundos");
-        setInterval('if (segundos > 0) { $counter.text(--segundos); }', 1000);
-    }
+    var $depositoMensagem = $(".deposito-mensagem");
 
     function enviaPagamento() {
-        $payPalMensagem.find(".msg-danger").hide();
-        $payPalMensagem.find(".msg-success").hide();
-        $payPalMensagem.find(".msg-warning").show();
-        $payPalMensagem.removeClass("alert-message-success");
-        $payPalMensagem.removeClass("alert-message-danger");
-        $payPalMensagem.addClass("alert-message-warning");
-        var url_pagar = '{% url_loja "checkout_pagador" pedido.numero pagamento.id %}?next_url=' + window.location.href.split("?")[0];
+        $depositoMensagem.find(".msg-danger").hide();
+        $depositoMensagem.find(".msg-success").hide();
+        $depositoMensagem.find(".msg-warning").show();
+        $depositoMensagem.removeClass("alert-message-success");
+        $depositoMensagem.removeClass("alert-message-danger");
+        $depositoMensagem.addClass("alert-message-warning");
+        var url_pagar = '{% url_loja "checkout_pagador" pedido.numero pagamento.id %}';
         $.getJSON(url_pagar)
             .fail(function (data) {
                 exibeMensagemErro(data.status, data.content);
@@ -26,58 +21,38 @@ $(function() {
                 console.log(data);
                 if (data.sucesso) {
                     $("#aguarde").hide();
-                    $("#redirecting").show();
-                    url = data.content.url;
-                    iniciaContador();
-                    setTimeout('window.location = url;', 5000);
+                    exibeMensagemSucesso()
                 }
                 else {
-                    exibeMensagemErro(data.content["L_ERRORCODE0"], data.content["L_SHORTMESSAGE0"] + " - " + data.content["L_LONGMESSAGE0"]);
+                    exibeMensagemErro(data.status, data.content);
                 }
             });
+    }
+
+    function exibeMensagemErro(status, mensagem) {
+        $depositoMensagem.find(".msg-warning").hide();
+        $depositoMensagem.toggleClass("alert-message-warning alert-message-danger");
+        var $errorMessage = $("#errorMessage");
+        $errorMessage.text(status + ": " + mensagem);
+        $depositoMensagem.find(".msg-danger").show();
+    }
+
+    function exibeMensagemSucesso() {
+        $depositoMensagem.find(".msg-warning").hide();
+        $depositoMensagem.toggleClass("alert-message-warning alert-message-success");
+        var $success = $depositoMensagem.find(".msg-success");
+        $success.find("#successMessage").show();
+        $success.show();
     }
 
     $(".msg-danger").on("click", ".pagar", function() {
         enviaPagamento();
     });
 
-    $(".msg-success").on("click", ".ir-mp", function() {
-        window.location = url;
-    });
-
-    function exibeMensagemErro(status, mensagem) {
-        $payPalMensagem.find(".msg-warning").hide();
-        $payPalMensagem.toggleClass("alert-message-warning alert-message-danger");
-        var $errorMessage = $("#errorMessage");
-        $errorMessage.text(status + ": " + mensagem);
-        $payPalMensagem.find(".msg-danger").show();
-    }
-
-    function exibeMensagemSucesso(situacao) {
-        $payPalMensagem.find(".msg-warning").hide();
-        $payPalMensagem.toggleClass("alert-message-warning alert-message-success");
-        var $success = $payPalMensagem.find(".msg-success");
-        $success.find("#redirecting").hide();
-        if (situacao == "pago") {
-            $success.find("#successMessage").show();
-        }
-        else {
-            $success.find("#pendingMessage").show();
-        }
-        $success.show();
-    }
-
     var pedidoPago = '{{ pedido.situacao_id }}' == '4';
-    var pedidoAguardandoPagamento = '{{ pedido.situacao_id }}' == '2';
 
-    if (window.location.search != "" && window.location.search.indexOf("failure") > -1) {
-        exibeMensagemErro(500, "Pagamento cancelado no MercadoPago!");
-    }
-    else if (window.location.search != "" && window.location.search.indexOf("success") > -1 || pedidoPago) {
+    if (pedidoPago) {
         exibeMensagemSucesso("pago");
-    }
-    else if (window.location.search != "" && window.location.search.indexOf("pending") > -1 || pedidoAguardandoPagamento) {
-        exibeMensagemSucesso("aguardando");
     }
     else {
         enviaPagamento();

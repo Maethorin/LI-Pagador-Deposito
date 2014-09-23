@@ -1,19 +1,8 @@
 
-<div class="paypal-mensagem alert-message alert-message-warning">
+<div class="deposito-mensagem alert-message alert-message-warning">
     <div class="msg-warning">
-        <p><img src="https://www.paypal-brasil.com.br/logocenter/util/img/compra_segura_horizontal.png"></p>
+        <p><img src="{{ STATIC_URL }}img/formas-de-pagamento/deposito-logo.png"></p>
         <div class="content">
-            <div id="redirecting" style="display: none;">
-                <h3>REDIRECIONANDO</h3>
-                <p class="lead">
-                    Você será redicionado para o PayPal em <span class="segundos" style="margin: 0; font-weight: bold;">5</span> segundos ou se preferir, <a href="#" class="ir-mp cor-secundaria">clique aqui</a>.
-                </p>
-                <div class="spinner">
-                    <div class="bounce1"></div>
-                    <div class="bounce2"></div>
-                    <div class="bounce3"></div>
-                </div>
-            </div>
             <div id="aguarde">
                 <h3>POR FAVOR AGUARDE, ANALISANDO DADOS</h3>
                 <div class="spinner">
@@ -25,26 +14,42 @@
         </div>
     </div>
     <div class="msg-success">
-        <p><img src="https://www.paypal-brasil.com.br/logocenter/util/img/compra_segura_horizontal.png"></p>
+        <p><img src="{{ STATIC_URL }}img/formas-de-pagamento/deposito-logo.png"></p>
         <div class="content">
             <div id="successMessage" style="display: none;">
-                <h3>SUCESSO</h3>
-                <p class="lead">
-                    Seu pagamento foi aprovado com sucesso! Obrigado por comprar em nossa loja.
+                <h3>DADOS PARA DEPÓSITO</h3>
+                <h4>
+                    <img id="bancoImagem" src="" alt="" class="pull-left thumbnail" />
+                    <span id="bancoCodigo"></span> - <span id="bancoNome"></span>
+                </h4>
+                <p>
+                    Agência: <strong id="bancoAgendia"></strong><br>
+                    Conta: <strong id="bancoConta"></strong>
+                    <small id="bancoPoupanca" class="muted"></small><br>
+                    CPF: <strong id="bancoCpfCnpj"></strong><br>
+                    Favorecido: <strong id="bancoFavorecido"></strong><br>
                 </p>
-            </div>
-            <div id="pendingMessage" style="display: none;">
-                <h3>EM ANÁLISE</h3>
-                <p class="lead">
-                    O PayPal está analisando seu pedido ou aguardando que o mesmo seja pago. Você será informado sempre através do seu email.
+                <hr class="cb">
+                <h4>
+                    <span class="muted">
+                        Envie o comprovante de pagamento para
+                    </span>
+                    <strong id="emailComprovante">
+
+                    </strong>
+                </h4>
+                <hr />
+                <p>
+                    <strong>Informações complementares:</strong><br>
+                    <span id="informacoesComplementares"></span>
                 </p>
             </div>
         </div>
     </div>
     <div class="msg-danger">
-        <p><img src="https://www.paypal-brasil.com.br/logocenter/util/img/compra_segura_horizontal.png"></p>
+        <p><img src="{{ STATIC_URL }}admin/img/formas-de-pagamento/deposito-logo.png"></p>
         <div class="content">
-            <h3>PAGAMENTO NÃO EFETUADO</h3>
+            <h3>ERRO NA TRANSMISSÃO</h3>
             <p class="lead">
                 Seu pagamento não foi concluído. Para tentar novamente clique no botão abaixo:
             </p>
