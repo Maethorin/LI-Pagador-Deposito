@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
+from django.db import IntegrityError
 
 from pagador.configuracao.cadastro import CampoFormulario, FormularioBase, TipoDeCampo, CadastroBase
 from pagador.configuracao.cliente import Script, TipoScript
@@ -36,6 +37,34 @@ class MeioPagamentoCadastro(CadastroBase):
             bancos.append(banco_dict)
         return {'bancos': bancos}
 
+    def salvar_complemento(self, dados):
+        print dados
+        if not 'banco_id' in dados:
+            return None
+        if not 'metodo' in dados:
+            return None
+        banco_pagamento, criado = self.configuracao.bancos_configurados_na_conta(int(dados['banco_id']))
+        if dados["metodo"].lower() == 'delete':
+            banco_pagamento.delete()
+            return {"status": 200, "content": "Banco removido com sucesso."}
+        cpf, cnpj = self.trata_cpf_cnpj(dados["cpf_cnpj"])
+        erro = None
+        if dados["cpf_cnpj"] and not cpf and not cnpj:
+            erro = {"status": 400, "content": u"CPF ou CNPJ inválido"}
+        if erro:
+            if criado:
+                banco_pagamento.delete()
+            return erro
+        banco_pagamento.ativo = (dados["ativo"] == 'true')
+        banco_pagamento.agencia = dados["agencia"]
+        banco_pagamento.numero_conta = dados["numero_conta"]
+        banco_pagamento.poupanca = dados["poupanca"]
+        banco_pagamento.cpf = cpf
+        banco_pagamento.cnpj = cnpj
+        banco_pagamento.favorecido = dados["favorecido"]
+        banco_pagamento.save()
+        return {"status": 200, "content": "Banco salvo com sucesso."}
+
     def to_dict(self):
         return {
             "contexto": self.contexto,
@@ -45,6 +74,17 @@ class MeioPagamentoCadastro(CadastroBase):
             ]
         }
 
+    def trata_cpf_cnpj(self, cpf_cnpj):
+        if not cpf_cnpj:
+            return None, None
+        cpf_cnpj = ''.join([x for x in cpf_cnpj if x.isdigit()])
+        cpf = None
+        cnpj = None
+        if len(cpf_cnpj) == 11:
+            cpf = cpf_cnpj
+        elif len(cpf_cnpj) == 14:
+            cnpj = cpf_cnpj
+        return cpf, cnpj
 
 class Formulario(FormularioBase):
     email_comprovante = CampoFormulario("usuario", u"E-mail para comprovante", requerido=False, tamanho_max=128, ordem=1)
