@@ -7,30 +7,30 @@
                                     </div>
                                     <div class="pagamento_imagem">
                                         <img style="margin-top: 2px;" src="{{ STATIC_URL }}img/formas-de-pagamento/checkout-deposito-logo.png" alt="{{pagamento.nome}}" />
-                                    {% if pagamento.codigo == 'deposito' and bancos_deposito %}
-                                    <ul class="">
-                                        <li style="font-weight: bold; position: relative;">
-                                            <img style="margin: 0 0 0 10px; vertical-align: middle; {% if pagamento.desconto and pagamento.desconto_valor %}margin-top: 4px;{% endif %}" src="{{ STATIC_URL }}img/formas-de-pagamento/{{ pagamento_banco.imagem }}" alt="{{ pagamento_banco.banco.nome }}">
-                                            <span style="margin-left: 6px; {% if pagamento.desconto and pagamento.desconto_valor %}margin: -5px 0 0 6px;{% endif %}">{{ pagamento_banco.banco.nome }}</span>
-                                            {% if pagamento.desconto and pagamento.desconto_valor %}
-                                            {% if request.session.cupom and not request.session.cupom_cumulativo %}
-                                            {% else %}
-                                                <strong style="color: red; position: absolute; left: 50px; margin-top: 8px; font-size: 11px;">Desconto de
-                                                {% if pagamento.desconto_tipo == 'porcentagem'%}
-                                                    {{pagamento.desconto_valor|floatformat:'%.2f'}}%
+                                        {% if pagamento.codigo == 'deposito' and bancos_deposito %}
+                                        <ul class="">
+                                            <li style="font-weight: bold; position: relative;">
+                                                <img style="margin: 0 0 0 10px; vertical-align: middle; {% if pagamento.desconto and pagamento.desconto_valor %}margin-top: 4px;{% endif %}" src="{{ STATIC_URL }}img/formas-de-pagamento/{{ pagamento_banco.imagem }}" alt="{{ pagamento_banco.banco.nome }}">
+                                                <span style="margin-left: 6px; {% if pagamento.desconto and pagamento.desconto_valor %}margin: -5px 0 0 6px;{% endif %}">{{ pagamento_banco.banco.nome }}</span>
+                                                {% if pagamento.desconto and pagamento.desconto_valor %}
+                                                {% if request.session.cupom and not request.session.cupom_cumulativo %}
                                                 {% else %}
-                                                    R$ {{pagamento.desconto_valor|formatar_decimal_br}}
+                                                    <strong style="color: red; position: absolute; left: 50px; margin-top: 8px; font-size: 11px;">Desconto de
+                                                    {% if pagamento.desconto_tipo == 'porcentagem'%}
+                                                        {{pagamento.desconto_valor|floatformat:'%.2f'}}%
+                                                    {% else %}
+                                                        R$ {{pagamento.desconto_valor|formatar_decimal_br}}
+                                                    {% endif %}
+                                                    </strong>
                                                 {% endif %}
-                                                </strong>
-                                            {% endif %}
-                                            {% endif %}
-                                        </li>
-                                    </ul>
-                                    {% endif %}
+                                                {% endif %}
+                                            </li>
+                                        </ul>
+                                        {% endif %}
                                     </div>
                                 </li>
                             {% endfor %}
-                <input type="hidden" name="pagamento_banco_id" value="" />
+                            <input type="hidden" name="pagamento_banco_id" value="" />
         {% else %}
 
                           {% for pagamento_banco in pagamento.bancos_ativos_na_conta %}
