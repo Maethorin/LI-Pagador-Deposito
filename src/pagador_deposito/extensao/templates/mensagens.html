@@ -1,7 +1,7 @@
 
 <div class="deposito-mensagem alert-message alert-message-warning">
     <div class="msg-warning">
-        <p><img src="{{ STATIC_URL }}img/formas-de-pagamento/deposito-logo.png"></p>
+        <p><img src="{{ ADMIN_STATIC_URL }}img/formas-de-pagamento/deposito-logo.png"></p>
         <div class="content">
             <div id="aguarde">
                 <h3>POR FAVOR AGUARDE, ANALISANDO DADOS</h3>
@@ -14,7 +14,7 @@
         </div>
     </div>
     <div class="msg-success">
-        <p><img src="{{ STATIC_URL }}img/formas-de-pagamento/deposito-logo.png"></p>
+        <p><img src="{{ ADMIN_STATIC_URL }}img/formas-de-pagamento/deposito-logo.png"></p>
         <div class="content">
             <div id="successMessage" style="display: none;">
                 <h3>DADOS PARA DEPÓSITO</h3>
@@ -23,10 +23,10 @@
                     <span id="bancoCodigo"></span> - <span id="bancoNome"></span>
                 </h4>
                 <p>
-                    Agência: <strong id="bancoAgendia"></strong><br>
+                    Agência: <strong id="bancoAgencia"></strong><br>
                     Conta: <strong id="bancoConta"></strong>
-                    <small id="bancoPoupanca" class="muted"></small><br>
-                    CPF: <strong id="bancoCpfCnpj"></strong><br>
+                    <small id="bancoPoupanca" class="muted">(conta poupança)</small><br>
+                    <span id="bancoNomeDocumento"></span><strong id="bancoCpfCnpj"></strong><br>
                     Favorecido: <strong id="bancoFavorecido"></strong><br>
                 </p>
                 <hr class="cb">
@@ -34,20 +34,20 @@
                     <span class="muted">
                         Envie o comprovante de pagamento para
                     </span>
-                    <strong id="emailComprovante">
+                    <strong id="bancoEmailComprovante">
 
                     </strong>
                 </h4>
                 <hr />
                 <p>
                     <strong>Informações complementares:</strong><br>
-                    <span id="informacoesComplementares"></span>
+                    <span id="bancoInformacoesComplementares"></span>
                 </p>
             </div>
         </div>
     </div>
     <div class="msg-danger">
-        <p><img src="{{ STATIC_URL }}admin/img/formas-de-pagamento/deposito-logo.png"></p>
+        <p><img src="{{ ADMIN_STATIC_URL }}admin/img/formas-de-pagamento/deposito-logo.png"></p>
         <div class="content">
             <h3>ERRO NA TRANSMISSÃO</h3>
             <p class="lead">

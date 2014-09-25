@@ -21,7 +21,7 @@ $(function() {
                 console.log(data);
                 if (data.sucesso) {
                     $("#aguarde").hide();
-                    exibeMensagemSucesso()
+                    exibeMensagemSucesso(data.content)
                 }
                 else {
                     exibeMensagemErro(data.status, data.content);
@@ -37,11 +37,37 @@ $(function() {
         $depositoMensagem.find(".msg-danger").show();
     }
 
-    function exibeMensagemSucesso() {
+    function exibeMensagemSucesso(banco) {
         $depositoMensagem.find(".msg-warning").hide();
         $depositoMensagem.toggleClass("alert-message-warning alert-message-success");
         var $success = $depositoMensagem.find(".msg-success");
-        $success.find("#successMessage").show();
+        var $dadosBanco = $success.find("#successMessage");
+        var url_imagem = '{{ ADMIN_STATIC_URL }}img/formas-de-pagamento/' + banco.imagem;
+        $dadosBanco.find("#bancoImagem").attr("src", url_imagem);
+        $dadosBanco.find("#bancoNome").text(banco.nome);
+        $dadosBanco.find("#bancoCodigo").text(banco.codigo);
+        $dadosBanco.find("#bancoAgencia").text(banco.agencia);
+        $dadosBanco.find("#bancoConta").text(banco.numero_conta);
+        $dadosBanco.find("#bancoPoupanca").hide();
+        if (banco.poupanca) {
+            $dadosBanco.find("#bancoPoupanca").show();
+        }
+        if (banco.cpf) {
+            $dadosBanco.find("#bancoNomeDocumento").text("CPF:");
+            $dadosBanco.find("#bancoCpfCnpj").text(banco.cpf);
+        }
+        else if (banco.cnpj) {
+            $dadosBanco.find("#bancoNomeDocumento").text("CNPJ:");
+            $dadosBanco.find("#bancoCpfCnpj").text(banco.cnpj);
+        }
+        else {
+            $dadosBanco.find("#documentoNome").hide();
+            $dadosBanco.find("#bancoCpfCnpj").hide();
+        }
+        $dadosBanco.find("#bancoFavorecido").text(banco.favorecido);
+        $dadosBanco.find("#bancoEmailComprovante").text(banco.email_comprovante);
+        $dadosBanco.find("#bancoInformacoesComplementares").text(banco.informacao_complementar);
+        $dadosBanco.show();
         $success.show();
     }
 
