@@ -38,7 +38,6 @@ class MeioPagamentoCadastro(CadastroBase):
         return {'bancos': bancos}
 
     def salvar_complemento(self, dados):
-        print dados
         if not 'banco_id' in dados:
             return None
         if not 'metodo' in dados:
