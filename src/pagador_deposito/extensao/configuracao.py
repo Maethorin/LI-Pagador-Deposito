@@ -37,7 +37,7 @@ class MeioPagamentoCadastro(CadastroBase):
             bancos.append(banco_dict)
         return {'bancos': bancos}
 
-    def salvar_complemento(self, dados):
+    def complemento(self, dados):
         if not 'banco_id' in dados:
             return None
         if not 'metodo' in dados:
