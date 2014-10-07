@@ -42,7 +42,7 @@ $(function() {
         $depositoMensagem.toggleClass("alert-message-warning alert-message-success");
         var $success = $depositoMensagem.find(".msg-success");
         var $dadosBanco = $success.find("#successMessage");
-        var url_imagem = '{{ ADMIN_STATIC_URL }}img/formas-de-pagamento/' + banco.imagem;
+        var url_imagem = '{{ STATIC_URL }}img/formas-de-pagamento/bancos/' + banco.imagem;
         $dadosBanco.find("#bancoImagem").attr("src", url_imagem);
         $dadosBanco.find("#bancoNome").text(banco.nome);
         $dadosBanco.find("#bancoCodigo").text(banco.codigo);
