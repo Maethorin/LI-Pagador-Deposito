@@ -9,7 +9,7 @@ def read(fname):
 
 setup(
     name='li-pagador-deposito',
-    version='0.0.3',
+    version='0.0.4',
     url='https://github.com/lojaintegrada/LI-Pagador-Deposito',
     license='MIT',
     description=u'Meio de pagamento usando depósito bancário',
