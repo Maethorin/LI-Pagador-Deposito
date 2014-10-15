@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from pagador.envio.requisicao import Enviar
-from pagador.retorno.models import SituacaoPedido
 
 
 class EnviarPedido(Enviar):
@@ -12,7 +11,7 @@ class EnviarPedido(Enviar):
         self.grava_identificador = False
 
     def obter_situacao_do_pedido(self, status_requisicao):
-        return SituacaoPedido.SITUACAO_AGUARDANDO_PAGTO
+        return None
 
     def processar_resposta(self, resposta):
         try:
