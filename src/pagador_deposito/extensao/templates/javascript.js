@@ -23,6 +23,13 @@ $(function() {
                     $("#aguarde").hide();
                     exibeMensagemSucesso(data.content)
                 }
+                else if (data.status == 404) {
+                    var fatal = false;
+                    if (data.content.hasOwnProperty("fatal")) {
+                        fatal = data.content.fatal;
+                    }
+                    exibeMensagemErro(data.status, data.content.mensagem, fatal);
+                }
                 else {
                     if ('{{ settings.DEBUG }}' == 'True') {
                         exibeMensagemErro(data.status, data.content);
@@ -34,12 +41,16 @@ $(function() {
             });
     }
 
-    function exibeMensagemErro(status, mensagem) {
+    function exibeMensagemErro(status, mensagem, fatal) {
         $depositoMensagem.find(".msg-warning").hide();
         $depositoMensagem.toggleClass("alert-message-warning alert-message-danger");
         var $errorMessage = $("#errorMessage");
         $errorMessage.text(status + ": " + mensagem);
         $depositoMensagem.find(".msg-danger").show();
+        if (fatal) {
+            $(".pagar").remove();
+            $(".click").remove();
+        }
     }
 
     function exibeMensagemSucesso(banco) {
