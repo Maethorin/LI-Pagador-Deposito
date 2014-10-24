@@ -56,7 +56,7 @@ class MeioPagamentoCadastro(CadastroBase):
         banco_pagamento.ativo = (dados["ativo"] == 'true')
         banco_pagamento.agencia = dados["agencia"]
         banco_pagamento.numero_conta = dados["numero_conta"]
-        banco_pagamento.poupanca = dados["poupanca"]
+        banco_pagamento.poupanca = (dados["poupanca"] == 'true')
         banco_pagamento.cpf = cpf
         banco_pagamento.cnpj = cnpj
         banco_pagamento.favorecido = dados["favorecido"]
