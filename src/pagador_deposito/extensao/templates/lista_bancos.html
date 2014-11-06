@@ -16,7 +16,7 @@
                                         <td class="image">
                                             <a href="#editarBanco" class="editar-banco" data-toggle="modal" data-banco-id="{{ banco.id }}">
                                                 <span rel="tooltip" data-original-title="Clique aqui para editar as configurações deste banco.">
-                                                    <img src="{{ ADMIN_STATIC_URL }}img/formas-de-pagamento/{{ banco.imagem }}" alt="{{ banco.nome }}" class="banco"/>
+                                                    <img src="{{ STATIC_URL }}admin/img/formas-de-pagamento/{{ banco.imagem }}" alt="{{ banco.nome }}" class="banco"/>
                                                 </span>
                                             </a>
                                         </td>
@@ -175,7 +175,7 @@
         'banco_{{ banco.id }}': {
             'codigo': '{{ banco.codigo }}',
             'nome': '{{ banco.nome }}',
-            'imagem': '{{ ADMIN_STATIC_URL }}img/formas-de-pagamento/{{ banco.imagem }}',
+            'imagem': '{{ STATIC_URL }}admin/img/formas-de-pagamento/{{ banco.imagem }}',
             {% if banco.pagamento_banco %}
             'configuracao': {
                 'ativo': {{ banco.pagamento_banco.ativo|lower }},
