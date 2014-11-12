@@ -86,7 +86,7 @@ class MeioPagamentoCadastro(CadastroBase):
 
 
 class Formulario(FormularioBase):
-    email_comprovante = CampoFormulario("usuario", u"E-mail para comprovante", requerido=False, tamanho_max=128, ordem=1)
+    email_comprovante = CampoFormulario("email_comprovante", u"E-mail para comprovante", requerido=False, tamanho_max=128, ordem=1)
     desconto_valor = CampoFormulario("desconto_valor", u"Desconto aplicado", requerido=False, ordem=2, tipo=TipoDeCampo.decimal)
     informacao_complementar = CampoFormulario("informacao_complementar", u"Informação complementar", requerido=False, ordem=3, tipo=TipoDeCampo.area, texto_ajuda=u"Esta informação será apresentada junto dos dados bancários para o cliente.")
     aplicar_no_total = CampoFormulario("aplicar_no_total", u"Aplicar no total?", requerido=False, ordem=4, tipo=TipoDeCampo.boleano, texto_ajuda=u"Aplicar desconto no total da compra (incluir por exemplo o frete).")
