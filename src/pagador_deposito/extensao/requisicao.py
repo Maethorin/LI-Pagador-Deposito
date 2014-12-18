@@ -24,17 +24,17 @@ class EnviarPedido(Enviar):
             email_comprovante = self.pedido.conta.email_contato
         return {
             "content": {
-                "nome": unicode(pagamento_banco.banco.nome),
+                "nome": self.formatador.trata_unicode_com_limite(pagamento_banco.banco.nome),
                 "codigo": pagamento_banco.banco.codigo,
                 "imagem": pagamento_banco.banco.imagem,
                 "agencia": pagamento_banco.agencia,
                 "numero_conta": pagamento_banco.numero_conta,
                 "poupanca": pagamento_banco.poupanca,
-                "favorecido": unicode(pagamento_banco.favorecido),
+                "favorecido": self.formatador.trata_unicode_com_limite(pagamento_banco.favorecido),
                 "cpf": pagamento_banco.cpf,
                 "cnpj": pagamento_banco.cnpj,
                 "email_comprovante": email_comprovante,
-                "informacao_complementar": unicode(self.configuracao_pagamento.informacao_complementar),
+                "informacao_complementar": self.formatador.trata_unicode_com_limite(self.configuracao_pagamento.informacao_complementar),
             },
             "status": 200,
             "reenviar": False
