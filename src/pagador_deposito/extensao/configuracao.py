@@ -32,14 +32,15 @@ class MeioPagamentoCadastro(CadastroBase):
                     'poupanca': banco.pagamento_banco.poupanca,
                     'cpf_cnpj': banco.pagamento_banco.cpf_cnpj,
                     'favorecido': banco.pagamento_banco.favorecido,
+                    'operacao': banco.pagamento_banco.operacao,
                 }
             bancos.append(banco_dict)
         return {'bancos': bancos}
 
     def complemento(self, dados):
-        if not 'banco_id' in dados:
+        if 'banco_id' not in dados:
             return None
-        if not 'metodo' in dados:
+        if 'metodo' not in dados:
             return None
         banco_pagamento, criado = self.configuracao.bancos_configurados_na_conta(int(dados['banco_id']))
         if dados["metodo"].lower() == 'delete':
@@ -60,6 +61,7 @@ class MeioPagamentoCadastro(CadastroBase):
         banco_pagamento.cpf = cpf
         banco_pagamento.cnpj = cnpj
         banco_pagamento.favorecido = dados["favorecido"]
+        banco_pagamento.operacao = dados["operacao"]
         banco_pagamento.save()
         return {"status": 200, "content": "Banco salvo com sucesso."}
 

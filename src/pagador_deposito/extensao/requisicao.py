@@ -31,6 +31,7 @@ class EnviarPedido(Enviar):
                 "numero_conta": pagamento_banco.numero_conta,
                 "poupanca": pagamento_banco.poupanca,
                 "favorecido": self.formatador.trata_unicode_com_limite(pagamento_banco.favorecido),
+                "operacao": pagamento_banco.operacao,
                 "cpf": pagamento_banco.cpf,
                 "cnpj": pagamento_banco.cnpj,
                 "email_comprovante": email_comprovante,

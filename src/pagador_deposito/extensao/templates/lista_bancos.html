@@ -9,6 +9,7 @@
                                         <th>Poupança?</th>
                                         <th>CPF / CNPJ</th>
                                         <th>Favorecido</th>
+                                        <th>Operação</th>
                                     </tr>
                                 </thead>
                                 {% for banco in bancos %}
@@ -33,6 +34,7 @@
                                         <td class="banco-poupanca">{{ banco.pagamento_banco.poupanca|yesno:'Sim,Não' }}</td>
                                         <td class="banco-cpfcnpj">{{ banco.pagamento_banco.cpf_cnpj|formatar_cpf_cnpj }}</td>
                                         <td class="banco-favorecido">{{ banco.pagamento_banco.favorecido }}</td>
+                                        <td class="banco-operacao">{% if banco.pagamento_banco.operacao %}{{ banco.pagamento_banco.operacao }}{% else %}-{% endif %}</td>
                                         <td class="banco-ativo">
                                             <span class="label label-{% if banco.pagamento_banco.ativo %}success{% else %}important{% endif %}">
                                             {% if banco.pagamento_banco.ativo %}Ativo{% else %}Inativo{% endif %}
@@ -49,6 +51,7 @@
                                         <td class="banco-poupanca">-</td>
                                         <td class="banco-cpfcnpj">-</td>
                                         <td class="banco-favorecido">-</td>
+                                        <td class="banco-operacao">-</td>
                                         <td class="banco-ativo">
                                             <span class="label label-important">
                                                 <span class="glyphicon glyphicon-cog"></span> Não configurado
@@ -127,14 +130,6 @@
                                 </label>
                             </div>
                         </div>
-                        <div style="display: block;" class="form-group hide">
-                            <label for="id_operacao" class="control-label col-sm-3">
-                                Operação/Variação
-                            </label>
-                            <div class="col-sm-9">
-                                <input class="form-control" id="id_operacao" name="operacao" type="text">
-                            </div>
-                        </div>
                         <div class="form-group">
                             <label for="id_cpf_cnpj" class="control-label col-sm-3">
                                 CPF ou CNPJ
@@ -150,6 +145,24 @@
                             </label>
                             <div class="col-sm-9">
                                 <input class="form-control" id="id_favorecido" maxlength="256" name="favorecido" type="text">
+                            </div>
+                        </div>
+                        <div class="form-operacao form-group">
+                            <label for="id_operacao" class="control-label col-sm-3">
+                                Operação
+                            </label>
+                            <div class="col-sm-9">
+                                <select class="form-control" id="id_operacao" name="operacao">
+                                    <option value="001">001 - Conta Corrente de Pessoa Física</option>
+                                    <option value="002">002 - Conta Simples de Pessoa Física</option>
+                                    <option value="003">003 - Conta Corrente de Pessoa Jurídica</option>
+                                    <option value="006">006 - Entidades Públicas</option>
+                                    <option value="007">007 - Depósitos Instituições Financeiras</option>
+                                    <option value="013">013 - Poupança de Pessoa Física</option>
+                                    <option value="022">022 - Poupança de Pessoa Jurídica</option>
+                                    <option value="028">028 - Poupança de Crédito Imobiliário</option>
+                                    <option value="043">043 - Depósitos Lotéricos</option>
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -183,7 +196,8 @@
                 'numero_conta': "{{ banco.pagamento_banco.numero_conta }}",
                 'poupanca': {{ banco.pagamento_banco.poupanca|lower }},
                 'cpf_cnpj': "{{ banco.pagamento_banco.cpf_cnpj|formatar_cpf_cnpj }}",
-                'favorecido': "{{ banco.pagamento_banco.favorecido }}"
+                'favorecido': "{{ banco.pagamento_banco.favorecido }}",
+                'operacao': "{{ banco.pagamento_banco.operacao }}"
             }
             {% endif %}
         },
@@ -213,6 +227,7 @@
         $("#id_poupanca").prop("checked", configuracao.poupanca);
         $("#id_cpf_cnpj").val(configuracao.cpf_cnpj);
         $("#id_favorecido").val(configuracao.favorecido);
+        $("#id_operacao").val(configuracao.operacao);
     }
 
     function definirValoresDeTabela(dados) {
@@ -223,6 +238,7 @@
         $linha.find(".banco-poupanca").text(dados.poupanca ? "Sim" : "Não");
         $linha.find(".banco-cpfcnpj").text(formatar_cpf_cnpj(dados.cpf_cnpj));
         $linha.find(".banco-favorecido").text(dados.favorecido);
+        $linha.find(".banco-operacao").text(dados.operacao);
         $linha.find(".botao-remover .remover-banco").show();
         var banco = bancos["banco_" + dados.banco_id];
         if (!banco.hasOwnProperty("configuracao")) {
@@ -232,7 +248,8 @@
                 'numero_conta': "",
                 'poupanca': false,
                 'cpf_cnpj': "",
-                'favorecido': ""
+                'favorecido': "",
+                'operacao': "001"
             }
         }
         banco.configuracao.ativo = dados.ativo;
@@ -241,6 +258,7 @@
         banco.configuracao.poupanca = dados.poupanca;
         banco.configuracao.cpf_cnpj = dados.cpf_cnpj;
         banco.configuracao.favorecido = dados.favorecido;
+        banco.configuracao.operacao = dados.operacao;
     }
 
     function limparCampos() {
@@ -251,6 +269,7 @@
         $("#id_poupanca").prop("checked", false);
         $("#id_cpf_cnpj").val('');
         $("#id_favorecido").val('');
+        $("#id_operacao").val('001');
     }
 
     $("#enviarBancos").click(function() {
@@ -263,7 +282,8 @@
             "numero_conta": $("#id_numero_conta").val(),
             "poupanca": $("#id_poupanca").prop("checked"),
             "cpf_cnpj": $("#id_cpf_cnpj").val(),
-            "favorecido": $("#id_favorecido").val()
+            "favorecido": $("#id_favorecido").val(),
+            "operacao": $("#id_operacao").val()
         };
         $.getJSON(url, dados)
             .fail(function (data) {
@@ -299,6 +319,11 @@
         var $imagem = $modal.find(".banco-imagem");
         $imagem.attr("alt", banco.nome);
         $imagem.attr("src", banco.imagem);
+        var $formOperacao = $(".form-operacao");
+        $formOperacao.addClass("hide");
+        if (banco_id == 6) {
+            $formOperacao.removeClass("hide");
+        }
         if (banco.configuracao) {
             definirValoresDeCampo(banco.configuracao);
         }

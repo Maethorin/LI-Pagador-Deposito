@@ -81,6 +81,12 @@ $(function() {
             $dadosBanco.find("#bancoCpfCnpj").hide();
         }
         $dadosBanco.find("#bancoFavorecido").text(banco.favorecido);
+        var $spanOperacao = $("span.operacao");
+        $spanOperacao.hide();
+        if (banco.codigo == 104) {
+            $dadosBanco.find("#bancoOperacao").text(banco.operacao);
+            $spanOperacao.show();
+        }
         $dadosBanco.find("#bancoEmailComprovante").text(banco.email_comprovante);
         $dadosBanco.find("#bancoInformacoesComplementares").text(banco.informacao_complementar);
         $dadosBanco.show();
