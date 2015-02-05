@@ -1,5 +1,5 @@
 {% load filters %}
-{% if modo == "estrutura/v0" %}
+{% if modo == "v0" %}
     {% for pagamento_banco in pagamento.bancos_ativos_na_conta %}
     <li class="pagamento lista-item" id="pagamento_7-{{ pagamento_banco.id }}" data-id="7-{{ pagamento_banco.id }}" data-nome="Depósito Bancário">
         <div class="radio_button">
