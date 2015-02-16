@@ -11,7 +11,7 @@ extensibilidade.SETTINGS.EXTENSOES = {
 
 
 class ConfiguracaoMeioDePagamentoDaLoja(TestBase):
-    url = '/loja/8/meio-pagamento/deposito/'
+    url = '/loja/8/meio-pagamento/deposito/configurar'
 
     @mock.patch('pagador_deposito.reloaded.entidades.ConfiguracaoMeioPagamento')
     def test_deve_obter_dados_do_deposito(self, configuracao_mock):
