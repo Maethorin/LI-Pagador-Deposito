@@ -8,7 +8,7 @@ class ConfiguracaoMeioPagamento(entidades.ConfiguracaoMeioPagamento):
     _campos = ['ativo', 'email_comprovante', 'desconto_valor', 'informacao_complementar', 'aplicar_no_total']
     _codigo_gateway = 7
 
-    def __init__(self, loja_id):
-        super(ConfiguracaoMeioPagamento, self).__init__(loja_id)
+    def __init__(self, loja_id, codigo_pagamento=None):
+        super(ConfiguracaoMeioPagamento, self).__init__(loja_id, codigo_pagamento)
         self.preencher_do_gateway(self._codigo_gateway, self._campos)
         self.formulario = cadastro.FormularioDeposito()
