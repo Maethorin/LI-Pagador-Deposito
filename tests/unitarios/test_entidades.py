@@ -5,9 +5,9 @@ import mock
 from pagador_deposito.reloaded import entidades
 
 
-class ConfiguracaoMeioPagamento(unittest.TestCase):
+class DepositoConfiguracaoMeioPagamento(unittest.TestCase):
     def __init__(self, *args, **kwargs):
-        super(ConfiguracaoMeioPagamento, self).__init__(*args, **kwargs)
+        super(DepositoConfiguracaoMeioPagamento, self).__init__(*args, **kwargs)
         self.campos = ['ativo', 'email_comprovante', 'desconto_valor', 'informacao_complementar', 'aplicar_no_total']
         self.codigo_gateway = 7
 
