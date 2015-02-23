@@ -8,6 +8,13 @@ class FormularioDeposito(unittest.TestCase):
         super(FormularioDeposito, self).__init__(*args, **kwargs)
         self.formulario = cadastro.FormularioDeposito()
 
+    def test_deve_ter_bancos(self):
+        self.formulario.bancos.nome.should.be.equal('json')
+        self.formulario.bancos.ordem.should.be.equal(0)
+        self.formulario.bancos.formato.should.be.equal(cadastro.cadastro.FormatoDeCampo.json)
+        self.formulario.bancos.tipo.should.be.equal(cadastro.cadastro.TipoDeCampo.oculto)
+        self.formulario.bancos.validador.should.be.equal(cadastro.BancosValidador)
+
     def test_deve_ter_ativo(self):
         self.formulario.ativo.nome.should.be.equal('ativo')
         self.formulario.ativo.ordem.should.be.equal(1)
@@ -37,3 +44,34 @@ class FormularioDeposito(unittest.TestCase):
         self.formulario.aplicar_no_total.ordem.should.be.equal(5)
         self.formulario.aplicar_no_total.label.should.be.equal(u'Aplicar no total?')
         self.formulario.aplicar_no_total.tipo.should.be.equal(cadastro.cadastro.TipoDeCampo.boleano)
+
+
+class ValidadorBancos(unittest.TestCase):
+    def test_deve_adicionar_erro_se_nao_for_lista(self):
+        validador = cadastro.BancosValidador(valor='nao-eh-lista')
+        validador.eh_valido.should.be.equal(False)
+        validador.erros.should.contain('lista')
+        validador.erros['lista'].should.be.equal('Os bancos devem ser uma lista.')
+
+    def test_deve_adicionar_erro_para_atributos_faltando(self):
+        validador = cadastro.BancosValidador(valor=['faltando'])
+        validador.eh_valido.should.be.equal(False)
+        validador.erros.should.be.equal({
+            'atributos': [
+                u'Não foi enviado o atributo numero_conta do banco faltando',
+                u'Não foi enviado o atributo agencia do banco faltando',
+                u'Não foi enviado o atributo favorecido do banco faltando',
+                u'Não foi enviado o atributo cpf_cnpj do banco faltando',
+                u'Não foi enviado o atributo imagem do banco faltando',
+                u'Não foi enviado o atributo nome do banco faltando',
+                u'Não foi enviado o atributo operacao do banco faltando',
+                u'Não foi enviado o atributo codigo do banco faltando',
+                u'Não foi enviado o atributo ativo do banco faltando',
+                u'Não foi enviado o atributo poupanca do banco faltando'
+            ]
+        })
+
+    def test_deve_ser_valido_se_conter_todos_os_atributos(self):
+        validador = cadastro.BancosValidador(valor=[cadastro.BANCO_BASE.copy()])
+        validador.eh_valido.should.be.equal(True)
+        validador.erros.should.be.empty

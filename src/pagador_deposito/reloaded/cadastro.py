@@ -3,7 +3,41 @@
 from li_common.padroes import cadastro
 
 
+BANCO_BASE = {
+    'nome': None,
+    'imagem': None,
+    'codigo': None,
+    'ativo': False,
+    'agencia': None,
+    'numero_conta': None,
+    'poupanca': False,
+    'cpf_cnpj': None,
+    'favorecido': None,
+    'operacao': None,
+}
+
+
+class BancosValidador(cadastro.ValidadorBase):
+    @property
+    def eh_valido(self):
+        valido = True
+        if type(self.valor) is not list:
+            valido = False
+            self.erros['lista'] = 'Os bancos devem ser uma lista.'
+        for banco in self.valor:
+            erros = []
+            for chave in BANCO_BASE:
+                if chave not in banco:
+                    valido = False
+                    erros.append(u'Não foi enviado o atributo {} do banco {}'.format(chave, banco))
+            if erros:
+                self.erros['atributos'] = erros
+        return valido
+
+
 class FormularioDeposito(cadastro.Formulario):
+    bancos = cadastro.CampoFormulario('json', ordem=0, tipo=cadastro.TipoDeCampo.oculto, formato=cadastro.FormatoDeCampo.json, validador=BancosValidador)
+
     ativo = cadastro.CampoFormulario('ativo', 'Pagamento ativo?', requerido=True, tipo=cadastro.TipoDeCampo.boleano, ordem=1)
     email_comprovante = cadastro.CampoFormulario('email_comprovante', u'E-mail para comprovante', requerido=False, tamanho_max=128, ordem=2)
     desconto_valor = cadastro.CampoFormulario('desconto_valor', u'Desconto aplicado', requerido=False, ordem=3, tipo=cadastro.TipoDeCampo.decimal)
