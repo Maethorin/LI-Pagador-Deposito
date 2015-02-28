@@ -4,10 +4,12 @@ import json
 from pagador.reloaded import entidades
 from pagador_deposito.reloaded import cadastro
 
+CODIGO_GATEWAY = 7
+
 
 class ConfiguracaoMeioPagamento(entidades.ConfiguracaoMeioPagamento):
     _campos = ['ativo', 'email_comprovante', 'desconto_valor', 'informacao_complementar', 'aplicar_no_total', 'json']
-    _codigo_gateway = 7
+    _codigo_gateway = CODIGO_GATEWAY
 
     def __init__(self, loja_id, codigo_pagamento=None):
         super(ConfiguracaoMeioPagamento, self).__init__(loja_id, codigo_pagamento)
