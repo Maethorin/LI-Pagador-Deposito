@@ -37,10 +37,12 @@ class DepositoConfiguracaoMeioPagamento(unittest.TestCase):
     def test_deve_ter_json_padrao_se_nao_tiver_ainda(self, preencher_mock, banco_mock):
         banco_listar = mock.MagicMock()
         banco_1 = mock.MagicMock()
+        banco_1.id = 1
         banco_1.nome = 'banco_1'
         banco_1.codigo = 'codigo_1'
         banco_1.imagem = 'imagem_1'
         banco_2 = mock.MagicMock()
+        banco_2.id = 2
         banco_2.nome = 'banco_2'
         banco_2.codigo = 'codigo_2'
         banco_2.imagem = 'imagem_2'
@@ -48,8 +50,8 @@ class DepositoConfiguracaoMeioPagamento(unittest.TestCase):
         banco_listar.listar_todos.return_value = [banco_1, banco_2]
         configuracao = entidades.ConfiguracaoMeioPagamento(234)
         configuracao.json.should.be.equal([
-            {'numero_conta': None, 'favorecido': None, 'imagem': 'imagem_1', 'nome': 'banco_1', 'operacao': None, 'poupanca': False, 'agencia': None, 'cpf_cnpj': None, 'codigo': 'codigo_1', 'ativo': False},
-            {'numero_conta': None, 'favorecido': None, 'imagem': 'imagem_2', 'nome': 'banco_2', 'operacao': None, 'poupanca': False, 'agencia': None, 'cpf_cnpj': None, 'codigo': 'codigo_2', 'ativo': False}
+            {'id': 1, 'numero_conta': None, 'favorecido': None, 'imagem': 'imagem_1', 'nome': 'banco_1', 'operacao': None, 'poupanca': False, 'agencia': None, 'cpf_cnpj': None, 'codigo': 'codigo_1', 'ativo': False},
+            {'id': 2, 'numero_conta': None, 'favorecido': None, 'imagem': 'imagem_2', 'nome': 'banco_2', 'operacao': None, 'poupanca': False, 'agencia': None, 'cpf_cnpj': None, 'codigo': 'codigo_2', 'ativo': False}
         ])
 
     @mock.patch('pagador_deposito.reloaded.entidades.entidades.Banco')

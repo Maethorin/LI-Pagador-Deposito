@@ -58,16 +58,17 @@ class ValidadorBancos(unittest.TestCase):
         validador.eh_valido.should.be.equal(False)
         validador.erros.should.be.equal({
             'atributos': [
-                u'Não foi enviado o atributo numero_conta do banco faltando',
-                u'Não foi enviado o atributo agencia do banco faltando',
                 u'Não foi enviado o atributo favorecido do banco faltando',
-                u'Não foi enviado o atributo cpf_cnpj do banco faltando',
-                u'Não foi enviado o atributo imagem do banco faltando',
-                u'Não foi enviado o atributo nome do banco faltando',
                 u'Não foi enviado o atributo operacao do banco faltando',
+                u'Não foi enviado o atributo imagem do banco faltando',
+                u'Não foi enviado o atributo poupanca do banco faltando',
+                u'Não foi enviado o atributo agencia do banco faltando',
+                u'Não foi enviado o atributo cpf_cnpj do banco faltando',
+                u'Não foi enviado o atributo id do banco faltando',
+                u'Não foi enviado o atributo numero_conta do banco faltando',
+                u'Não foi enviado o atributo nome do banco faltando',
                 u'Não foi enviado o atributo codigo do banco faltando',
                 u'Não foi enviado o atributo ativo do banco faltando',
-                u'Não foi enviado o atributo poupanca do banco faltando'
             ]
         })
 

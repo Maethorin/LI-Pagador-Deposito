@@ -4,6 +4,7 @@ from li_common.padroes import cadastro
 
 
 BANCO_BASE = {
+    'id': None,
     'nome': None,
     'imagem': None,
     'codigo': None,
