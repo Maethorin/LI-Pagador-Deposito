@@ -2,16 +2,10 @@
 from pagador.reloaded import servicos
 
 
-class Resultado(object):
-    def __init__(self, dados):
-        self.sucesso = True
-        self.conteudo = {'dados': dados}
-
-
 class EntregaPagamento(servicos.EntregaPagamento):
     def __init__(self, loja_id, plano_indice=1):
         super(EntregaPagamento, self).__init__(loja_id, plano_indice)
         self.tem_malote = True
 
-    def enviar_pagamento(self, tentativa=1):
-        self.resultado = Resultado(self.malote.to_dict())
+    def processa_dados_de_pagamento(self):
+        self.resultado = {'dados': self.malote.to_dict()}
