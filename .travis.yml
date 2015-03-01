@@ -15,7 +15,7 @@ deploy:
   provider: pypi
   user: lojaintegrada
   password:
-    secure:
+    secure: JRxGL79IcdVS0Hebit0KROcVw1UC2z0TkOcD4fiitFVEvz/JIfzAyglaeMUsmDFJXnZ7p+A4/ZwL07V1PsRDnhrgOKfeyHzZszb2KljHymxdU/XrHAum5NXBAxhB/3RujL7zJAGDhcN4yolu0pJtZ9YhhBe7titOLOXZcvrQYMY=
   on:
     tags: true
     repo: lojaintegrada/LI-Pagador-Deposito
