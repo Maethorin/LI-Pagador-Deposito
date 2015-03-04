@@ -13,5 +13,5 @@ class EntrgandoPagamento(unittest.TestCase):
         entrega = servicos.EntregaPagamento(234)
         entrega.malote = mock.MagicMock()
         entrega.malote.to_dict.return_value = 'MALOTE'
-        entrega.processa_dados_de_pagamento()
+        entrega.processa_dados_pagamento()
         entrega.resultado.should.be.equal({'dados': 'MALOTE'})

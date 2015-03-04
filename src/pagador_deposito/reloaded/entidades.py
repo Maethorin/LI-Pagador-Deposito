@@ -37,7 +37,7 @@ class Malote(entidades.Malote):
 
         self.email_comprovante = self.configuracao.email_comprovante
         if not self.email_comprovante:
-            self.email_comprovante = pedido.email_contato_da_loja
+            self.email_comprovante = pedido.email_contato_loja
         self.banco_nome = self.formatador.trata_unicode_com_limite(banco['nome'])
         self.banco_codigo = banco['codigo']
         self.banco_imagem = banco['imagem']
@@ -60,7 +60,7 @@ class ConfiguracaoMeioPagamento(entidades.ConfiguracaoMeioPagamento):
 
     def __init__(self, loja_id, codigo_pagamento=None):
         super(ConfiguracaoMeioPagamento, self).__init__(loja_id, codigo_pagamento)
-        self.preencher_do_gateway(self._codigo_gateway, self._campos)
+        self.preencher_gateway(self._codigo_gateway, self._campos)
         self.formulario = cadastro.FormularioDeposito()
         if not self.json:
             self.json = []

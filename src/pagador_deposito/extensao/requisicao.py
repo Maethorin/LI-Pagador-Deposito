@@ -8,14 +8,14 @@ class EnviarPedido(Enviar):
         super(EnviarPedido, self).__init__(pedido, dados, configuracao_pagamento)
         self.processa_resposta = True
         self.url = None
-        self.deve_gravar_dados_de_pagamento = False
+        self.deve_gravar_dados_pagamento = False
 
-    def obter_situacao_do_pedido(self, status_requisicao):
+    def obter_situacao_pedido(self, status_requisicao):
         return None
 
     def processar_resposta(self, resposta):
         try:
-            pagamento_venda = self.pedido.pedido_venda_pagamento_da_forma_de_pagamento(pagamento_id=7)[0]
+            pagamento_venda = self.pedido.pedido_venda_pagamento_forma_pagamento(pagamento_id=7)[0]
         except IndexError:
             return {"content": u"Não foi encontrada forma de pagamento usando depósito bancário para o pedido {} na conta {}".format(self.pedido.numero, self.pedido.conta_id), "status": 404, "reenviar": False}
         pagamento_banco = pagamento_venda.banco

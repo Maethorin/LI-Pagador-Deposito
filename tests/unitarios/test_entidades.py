@@ -18,25 +18,25 @@ class DepositoConfiguracaoMeioPagamento(unittest.TestCase):
         entidades.ConfiguracaoMeioPagamento._codigo_gateway.should.be.equal(self.codigo_gateway)
 
     @mock.patch('pagador_deposito.reloaded.entidades.entidades.Banco', mock.MagicMock())
-    @mock.patch('pagador_deposito.reloaded.entidades.ConfiguracaoMeioPagamento.preencher_do_gateway', autospec=True)
-    def test_deve_preencher_do_gateway_na_inicializacao(self, preencher_mock):
+    @mock.patch('pagador_deposito.reloaded.entidades.ConfiguracaoMeioPagamento.preencher_gateway', autospec=True)
+    def test_deve_preencher_gateway_na_inicializacao(self, preencher_mock):
         configuracao = entidades.ConfiguracaoMeioPagamento(234)
         preencher_mock.assert_called_with(configuracao, self.codigo_gateway, self.campos)
 
     @mock.patch('pagador_deposito.reloaded.entidades.entidades.Banco', mock.MagicMock())
-    @mock.patch('pagador_deposito.reloaded.entidades.ConfiguracaoMeioPagamento.preencher_do_gateway', autospec=True)
+    @mock.patch('pagador_deposito.reloaded.entidades.ConfiguracaoMeioPagamento.preencher_gateway', autospec=True)
     def test_deve_definir_formulario_na_inicializacao(self, preencher_mock):
         configuracao = entidades.ConfiguracaoMeioPagamento(234)
         configuracao.formulario.should.be.a('pagador_deposito.reloaded.cadastro.FormularioDeposito')
 
     @mock.patch('pagador_deposito.reloaded.entidades.entidades.Banco', mock.MagicMock())
-    @mock.patch('pagador_deposito.reloaded.entidades.ConfiguracaoMeioPagamento.preencher_do_gateway', autospec=True)
+    @mock.patch('pagador_deposito.reloaded.entidades.ConfiguracaoMeioPagamento.preencher_gateway', autospec=True)
     def test_deve_nao_ser_aplicacao(self, preencher_mock):
         configuracao = entidades.ConfiguracaoMeioPagamento(234)
         configuracao.eh_aplicacao.should.be.falsy
 
     @mock.patch('pagador_deposito.reloaded.entidades.entidades.Banco')
-    @mock.patch('pagador_deposito.reloaded.entidades.ConfiguracaoMeioPagamento.preencher_do_gateway', autospec=True)
+    @mock.patch('pagador_deposito.reloaded.entidades.ConfiguracaoMeioPagamento.preencher_gateway', autospec=True)
     def test_deve_ter_json_padrao_se_nao_tiver_ainda(self, preencher_mock, banco_mock):
         banco_listar = mock.MagicMock()
         banco_1 = mock.MagicMock()
@@ -58,7 +58,7 @@ class DepositoConfiguracaoMeioPagamento(unittest.TestCase):
         ])
 
     @mock.patch('pagador_deposito.reloaded.entidades.entidades.Banco')
-    @mock.patch('pagador_deposito.reloaded.entidades.ConfiguracaoMeioPagamento.preencher_do_gateway', autospec=True)
+    @mock.patch('pagador_deposito.reloaded.entidades.ConfiguracaoMeioPagamento.preencher_gateway', autospec=True)
     def test_deve_dizer_que_esta_configurado(self, preencher_mock, banco_mock):
         banco_listar = mock.MagicMock()
         banco_1 = mock.MagicMock()
@@ -75,7 +75,7 @@ class DepositoConfiguracaoMeioPagamento(unittest.TestCase):
         configuracao.configurado.should.be.falsy
 
     @mock.patch('pagador_deposito.reloaded.entidades.entidades.Banco')
-    @mock.patch('pagador_deposito.reloaded.entidades.ConfiguracaoMeioPagamento.preencher_do_gateway', autospec=True)
+    @mock.patch('pagador_deposito.reloaded.entidades.ConfiguracaoMeioPagamento.preencher_gateway', autospec=True)
     def test_deve_dizer_que_estah_configurado(self, preencher_mock, banco_mock):
         configuracao = entidades.ConfiguracaoMeioPagamento(234)
         configuracao.json = [
@@ -85,7 +85,7 @@ class DepositoConfiguracaoMeioPagamento(unittest.TestCase):
         configuracao.configurado.should.be.truthy
 
     @mock.patch('pagador_deposito.reloaded.entidades.entidades.Banco')
-    @mock.patch('pagador_deposito.reloaded.entidades.ConfiguracaoMeioPagamento.preencher_do_gateway', autospec=True)
+    @mock.patch('pagador_deposito.reloaded.entidades.ConfiguracaoMeioPagamento.preencher_gateway', autospec=True)
     def test_operacao_nao_pode_none_se_banco_for_104(self, preencher_mock, banco_mock):
         configuracao = entidades.ConfiguracaoMeioPagamento(234)
         configuracao.json = [
@@ -95,8 +95,8 @@ class DepositoConfiguracaoMeioPagamento(unittest.TestCase):
         configuracao.configurado.should.be.falsy
 
     @mock.patch('pagador_deposito.reloaded.entidades.entidades.Banco')
-    @mock.patch('pagador_deposito.reloaded.entidades.ConfiguracaoMeioPagamento.preencher_do_gateway', autospec=True)
-    def test_banco_104_de_validar_operacao(self, preencher_mock, banco_mock):
+    @mock.patch('pagador_deposito.reloaded.entidades.ConfiguracaoMeioPagamento.preencher_gateway', autospec=True)
+    def test_banco_104_validar_operacao(self, preencher_mock, banco_mock):
         configuracao = entidades.ConfiguracaoMeioPagamento(234)
         configuracao.json = [
             {'numero_conta': '12322', 'favorecido': 'ZAS', 'imagem': 'imagem_1', 'nome': 'banco_1', 'operacao': '001', 'poupanca': False, 'agencia': '1554', 'cpf_cnpj': '1234568', 'codigo': '104', 'ativo': True},
@@ -105,7 +105,7 @@ class DepositoConfiguracaoMeioPagamento(unittest.TestCase):
         configuracao.configurado.should.be.truthy
 
     @mock.patch('pagador_deposito.reloaded.entidades.entidades.Banco')
-    @mock.patch('pagador_deposito.reloaded.entidades.ConfiguracaoMeioPagamento.preencher_do_gateway', autospec=True)
+    @mock.patch('pagador_deposito.reloaded.entidades.ConfiguracaoMeioPagamento.preencher_gateway', autospec=True)
     def test_deve_obter_banco_ativo(self, preencher_mock, banco_mock):
         configuracao = entidades.ConfiguracaoMeioPagamento(234)
         configuracao.json = [
@@ -116,7 +116,7 @@ class DepositoConfiguracaoMeioPagamento(unittest.TestCase):
         configuracao.obter_banco_ativo('1').should.be.equal(configuracao.json[0])
 
     @mock.patch('pagador_deposito.reloaded.entidades.entidades.Banco')
-    @mock.patch('pagador_deposito.reloaded.entidades.ConfiguracaoMeioPagamento.preencher_do_gateway', autospec=True)
+    @mock.patch('pagador_deposito.reloaded.entidades.ConfiguracaoMeioPagamento.preencher_gateway', autospec=True)
     def test_deve_obter_banco_ativo_retorna_erro_se_nao_for_ativo(self, preencher_mock, banco_mock):
         configuracao = entidades.ConfiguracaoMeioPagamento(234)
         configuracao.json = [
@@ -130,7 +130,7 @@ class DepositoConfiguracaoMeioPagamento(unittest.TestCase):
         )
 
     @mock.patch('pagador_deposito.reloaded.entidades.entidades.Banco')
-    @mock.patch('pagador_deposito.reloaded.entidades.ConfiguracaoMeioPagamento.preencher_do_gateway', autospec=True)
+    @mock.patch('pagador_deposito.reloaded.entidades.ConfiguracaoMeioPagamento.preencher_gateway', autospec=True)
     def test_deve_obter_banco_ativo_retorna_erro_se_nao_achar(self, preencher_mock, banco_mock):
         configuracao = entidades.ConfiguracaoMeioPagamento(234)
         configuracao.json = [
@@ -163,7 +163,7 @@ class DepositoMontandoMalote(unittest.TestCase):
         self.malote = entidades.Malote(mock.MagicMock(loja_id=self.loja_id, json=self.dados_json, email_comprovante='email@comprovante.com', informacao_complementar='informacao_complementar'))
         self.pedido = mock.MagicMock()
         self.pedido.numero = 1234
-        self.pedido.email_contato_da_loja = 'email@contato.com'
+        self.pedido.email_contato_loja = 'email@contato.com'
 
     def test_deve_ter_propriedades(self):
         entidades.Malote('configuracao').to_dict().should.be.equal(
@@ -186,7 +186,7 @@ class DepositoMontandoMalote(unittest.TestCase):
             }
         )
 
-    def test_obter_email_da_conta(self):
+    def test_obter_email_conta(self):
         dados = {'banco_id': '1'}
         self.malote.configuracao.obter_banco_ativo.return_value = self.dados_json[0]
         self.malote.configuracao.email_comprovante = None
@@ -199,11 +199,11 @@ class DepositoMontandoMalote(unittest.TestCase):
             }
         )
 
-    def test_da_erro_se_nao_passar_banco_id(self):
+    def test_dah_erro_se_nao_passar_banco_id(self):
         dados = {}
         self.malote.monta_conteudo.when.called_with(self.pedido, parametros_contrato=None, dados=dados).should.throw(entidades.DepositoInvalido, u'Não foi informado o banco para o depósito do pedido {} no dados.'.format(self.pedido.numero))
 
-    def test_da_erro_se_nao_achar_banco(self):
+    def test_dah_erro_se_nao_achar_banco(self):
         dados = {'banco_id': '10'}
         self.malote.configuracao.obter_banco_ativo.side_effect = entidades.ConfiguracaoBancoNaoEncontrada()
         self.malote.monta_conteudo.when.called_with(self.pedido, parametros_contrato=None, dados=dados).should.throw(
