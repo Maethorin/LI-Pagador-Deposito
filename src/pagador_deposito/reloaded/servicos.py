@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from pagador.reloaded import servicos
+from pagador import servicos
 
 
 class EntregaPagamento(servicos.EntregaPagamento):

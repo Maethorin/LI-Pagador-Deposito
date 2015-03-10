@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
-import json
 
-from pagador.reloaded import entidades
+from pagador import entidades
 from pagador_deposito.reloaded import cadastro
 
 CODIGO_GATEWAY = 7
+
 
 class DepositoInvalido(Exception):
     pass
