@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import unittest
-from pagador_deposito.reloaded import cadastro
+
+from pagador_deposito import cadastro
 
 
 class FormularioDeposito(unittest.TestCase):

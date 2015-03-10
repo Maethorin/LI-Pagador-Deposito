@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 import unittest
+
 import mock
-from pagador_deposito.reloaded import servicos
+
+from pagador_deposito import servicos
 
 
 class EntrgandoPagamento(unittest.TestCase):

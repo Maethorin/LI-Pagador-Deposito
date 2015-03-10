@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from pagador import entidades
-from pagador_deposito.reloaded import cadastro
+from pagador_deposito import cadastro
 
 CODIGO_GATEWAY = 7
 

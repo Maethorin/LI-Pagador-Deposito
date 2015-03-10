@@ -6,14 +6,14 @@ from li_common.padroes import extensibilidade
 from tests.base import TestBase
 
 extensibilidade.SETTINGS.EXTENSOES = {
-    'deposito': 'pagador_deposito.reloaded'
+    'deposito': 'pagador_deposito'
 }
 
 
 class DepositoConfiguracaoMeioDePagamentoDaLoja(TestBase):
     url = '/loja/8/meio-pagamento/deposito/configurar'
 
-    @mock.patch('pagador_deposito.reloaded.entidades.ConfiguracaoMeioPagamento')
+    @mock.patch('pagador_deposito.entidades.ConfiguracaoMeioPagamento')
     def test_deve_obter_dados_deposito(self, configuracao_mock):
         configuracao = mock.MagicMock()
         configuracao_mock.return_value = configuracao
@@ -23,7 +23,7 @@ class DepositoConfiguracaoMeioDePagamentoDaLoja(TestBase):
         response.status_code.should.be.equal(200)
         configuracao_mock.assert_called_with(loja_id=8, codigo_pagamento='deposito')
 
-    @mock.patch('pagador_deposito.reloaded.entidades.ConfiguracaoMeioPagamento')
+    @mock.patch('pagador_deposito.entidades.ConfiguracaoMeioPagamento')
     def test_deve_grava_dados_deposito(self, configuracao_mock):
         configuracao = mock.MagicMock()
         configuracao_mock.return_value = configuracao
