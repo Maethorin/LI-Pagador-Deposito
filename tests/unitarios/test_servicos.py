@@ -17,10 +17,3 @@ class EntregandoPagamento(unittest.TestCase):
         entrega.malote.to_dict.return_value = 'MALOTE'
         entrega.processa_dados_pagamento()
         entrega.resultado.should.be.equal({'dados': 'MALOTE'})
-
-    def test_definde_dados_pagamento(self):
-        entrega = servicos.EntregaPagamento(234)
-        entrega.malote = mock.MagicMock(banco_imagem='imagem-banco', banco_nome='nome-banco')
-        entrega.malote.to_dict.return_value = 'MALOTE'
-        entrega.processa_dados_pagamento()
-        entrega.dados_pagamento.should.be.equal({'conteudo_json': {'banco_imagem': 'imagem-banco', 'banco_nome': 'nome-banco'}})
