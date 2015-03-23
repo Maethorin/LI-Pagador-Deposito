@@ -8,4 +8,8 @@ class EntregaPagamento(servicos.EntregaPagamento):
         self.tem_malote = True
 
     def processa_dados_pagamento(self):
-        self.resultado = {'dados': self.malote.to_dict()}
+        self.dados_enviados = self.malote.to_dict()
+        self.resultado = {'dados': self.dados_enviados}
+        self.dados_pagamento = {
+            'conteudo_json': {'banco_nome': self.malote.banco_nome, 'banco_imagem': self.malote.banco_imagem}
+        }
