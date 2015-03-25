@@ -56,11 +56,11 @@ class ConfiguracaoBancoNaoEncontrada(Exception):
 
 class ConfiguracaoMeioPagamento(entidades.ConfiguracaoMeioPagamento):
 
-    def __init__(self, loja_id, codigo_pagamento=None):
-        self.campos = ['ativo', 'email_comprovante', 'desconto_valor', 'informacao_complementar', 'aplicar_no_total', 'json']
+    def __init__(self, loja_id, codigo_pagamento=None, eh_listagem=False):
+        self.campos = ['ativo', 'email_comprovante', 'desconto', 'desconto_valor', 'informacao_complementar', 'aplicar_no_total', 'json']
         self.codigo_gateway = CODIGO_GATEWAY
         self.eh_gateway = True
-        super(ConfiguracaoMeioPagamento, self).__init__(loja_id, codigo_pagamento)
+        super(ConfiguracaoMeioPagamento, self).__init__(loja_id, codigo_pagamento, eh_listagem)
         self.formulario = cadastro.FormularioDeposito()
         if not self.json:
             self.json = []

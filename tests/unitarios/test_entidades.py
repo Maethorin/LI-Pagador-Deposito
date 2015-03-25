@@ -9,7 +9,7 @@ from pagador_deposito import entidades
 class DepositoConfiguracaoMeioPagamento(unittest.TestCase):
     def __init__(self, *args, **kwargs):
         super(DepositoConfiguracaoMeioPagamento, self).__init__(*args, **kwargs)
-        self.campos = ['ativo', 'email_comprovante', 'desconto_valor', 'informacao_complementar', 'aplicar_no_total', 'json']
+        self.campos = ['ativo', 'email_comprovante', 'desconto', 'desconto_valor', 'informacao_complementar', 'aplicar_no_total', 'json']
         self.codigo_gateway = 7
 
     @mock.patch('pagador_deposito.entidades.entidades.Banco', mock.MagicMock())
