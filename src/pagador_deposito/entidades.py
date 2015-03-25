@@ -61,16 +61,17 @@ class ConfiguracaoMeioPagamento(entidades.ConfiguracaoMeioPagamento):
         self.codigo_gateway = CODIGO_GATEWAY
         self.eh_gateway = True
         super(ConfiguracaoMeioPagamento, self).__init__(loja_id, codigo_pagamento, eh_listagem=eh_listagem)
-        self.formulario = cadastro.FormularioDeposito()
-        if not self.json:
-            self.json = []
-            for banco in entidades.Banco().listar_todos():
-                banco_deposito = cadastro.BANCO_BASE.copy()
-                banco_deposito['id'] = banco.id
-                banco_deposito['nome'] = banco.nome
-                banco_deposito['codigo'] = banco.codigo
-                banco_deposito['imagem'] = banco.imagem
-                self.json.append(banco_deposito)
+        if not self.eh_listagem:
+            self.formulario = cadastro.FormularioDeposito()
+            if not self.json:
+                self.json = []
+                for banco in entidades.Banco().listar_todos():
+                    banco_deposito = cadastro.BANCO_BASE.copy()
+                    banco_deposito['id'] = banco.id
+                    banco_deposito['nome'] = banco.nome
+                    banco_deposito['codigo'] = banco.codigo
+                    banco_deposito['imagem'] = banco.imagem
+                    self.json.append(banco_deposito)
 
     @property
     def configurado(self):
