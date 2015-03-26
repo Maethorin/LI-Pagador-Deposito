@@ -64,7 +64,7 @@ class DepositoConfiguracaoMeioPagamento(unittest.TestCase):
 
     @mock.patch('pagador_deposito.entidades.ConfiguracaoMeioPagamento.preencher_gateway', mock.MagicMock())
     @mock.patch('pagador_deposito.entidades.entidades.Banco')
-    def test_deve_dizer_que_esta_configurado(self, banco_mock):
+    def test_deve_dizer_que_nao_esta_configurado(self, banco_mock):
         banco_listar = mock.MagicMock()
         banco_1 = mock.MagicMock()
         banco_1.nome = 'banco_1'
@@ -77,6 +77,13 @@ class DepositoConfiguracaoMeioPagamento(unittest.TestCase):
         banco_mock.return_value = banco_listar
         banco_listar.listar_todos.return_value = [banco_1, banco_2]
         configuracao = entidades.ConfiguracaoMeioPagamento(234)
+        configuracao.configurado.should.be.falsy
+
+    @mock.patch('pagador_deposito.entidades.entidades.Banco', mock.MagicMock())
+    @mock.patch('pagador_deposito.entidades.ConfiguracaoMeioPagamento.preencher_gateway', mock.MagicMock())
+    def test_deve_dizer_que_nao_estah_configurado_se_json_for_none(self):
+        configuracao = entidades.ConfiguracaoMeioPagamento(234)
+        configuracao.json = None
         configuracao.configurado.should.be.falsy
 
     @mock.patch('pagador_deposito.entidades.entidades.Banco', mock.MagicMock())
