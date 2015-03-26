@@ -5,9 +5,6 @@ from li_common.padroes import cadastro
 
 BANCO_BASE = {
     'id': None,
-    'nome': None,
-    'imagem': None,
-    'codigo': None,
     'ativo': False,
     'agencia': None,
     'numero_conta': None,
@@ -57,3 +54,5 @@ class FormularioDeposito(cadastro.Formulario):
     desconto_valor = cadastro.CampoFormulario('desconto_valor', u'Desconto aplicado', requerido=False, ordem=4, tipo=cadastro.TipoDeCampo.decimal, validador=DescontoValidador)
     informacao_complementar = cadastro.CampoFormulario('informacao_complementar', u'Informação complementar', requerido=False, ordem=5, tipo=cadastro.TipoDeCampo.area, texto_ajuda=u'Esta informação será apresentada junto dos dados bancários para o cliente.')
     aplicar_no_total = cadastro.CampoFormulario('aplicar_no_total', u'Aplicar no total?', requerido=False, ordem=6, tipo=cadastro.TipoDeCampo.boleano, texto_ajuda=u'Aplicar desconto no total da compra (incluir por exemplo o frete).')
+
+

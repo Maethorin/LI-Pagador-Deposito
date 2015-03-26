@@ -58,24 +58,30 @@ class DepositoConfiguracaoMeioPagamento(unittest.TestCase):
         banco_listar.listar_todos.return_value = [banco_1, banco_2]
         configuracao = entidades.ConfiguracaoMeioPagamento(234)
         configuracao.json.should.be.equal([
-            {'id': 1, 'numero_conta': None, 'favorecido': None, 'imagem': 'imagem_1', 'nome': 'banco_1', 'operacao': None, 'poupanca': False, 'agencia': None, 'cpf_cnpj': None, 'codigo': 'codigo_1', 'ativo': False},
-            {'id': 2, 'numero_conta': None, 'favorecido': None, 'imagem': 'imagem_2', 'nome': 'banco_2', 'operacao': None, 'poupanca': False, 'agencia': None, 'cpf_cnpj': None, 'codigo': 'codigo_2', 'ativo': False}
+            {'id': 1, 'numero_conta': None, 'favorecido': None, 'operacao': None, 'poupanca': False, 'agencia': None, 'cpf_cnpj': None, 'ativo': False},
+            {'id': 2, 'numero_conta': None, 'favorecido': None, 'operacao': None, 'poupanca': False, 'agencia': None, 'cpf_cnpj': None, 'ativo': False}
+        ])
+
+    @mock.patch('pagador_deposito.entidades.ConfiguracaoMeioPagamento.preencher_gateway', mock.MagicMock())
+    @mock.patch('pagador_deposito.entidades.entidades.Banco')
+    def test_deve_montar_lista_de_bancos_mesclando_com_json_vazio(self, banco_mock):
+        banco_mock.return_value.listar_todos.return_value = [
+            mock.MagicMock(id=1, nome='Banco 1', codigo='101', imagem='imagem01.png'),
+            mock.MagicMock(id=2, nome='Banco 2', codigo='102', imagem='imagem02.png'),
+        ]
+        configuracao = entidades.ConfiguracaoMeioPagamento(234)
+        configuracao.bancos.should.be.equal([
+            {'numero_conta': None, 'favorecido': None, 'imagem': 'imagem01.png', 'nome': 'Banco 1', 'operacao': None, 'poupanca': False, 'agencia': None, 'cpf_cnpj': None, 'codigo': '101', 'ativo': False, 'id': 1},
+            {'numero_conta': None, 'favorecido': None, 'imagem': 'imagem02.png', 'nome': 'Banco 2', 'operacao': None, 'poupanca': False, 'agencia': None, 'cpf_cnpj': None, 'codigo': '102', 'ativo': False, 'id': 2}
         ])
 
     @mock.patch('pagador_deposito.entidades.ConfiguracaoMeioPagamento.preencher_gateway', mock.MagicMock())
     @mock.patch('pagador_deposito.entidades.entidades.Banco')
     def test_deve_dizer_que_nao_esta_configurado(self, banco_mock):
-        banco_listar = mock.MagicMock()
-        banco_1 = mock.MagicMock()
-        banco_1.nome = 'banco_1'
-        banco_1.codigo = 'codigo_1'
-        banco_1.imagem = 'imagem_1'
-        banco_2 = mock.MagicMock()
-        banco_2.nome = 'banco_2'
-        banco_2.codigo = 'codigo_2'
-        banco_2.imagem = 'imagem_2'
-        banco_mock.return_value = banco_listar
-        banco_listar.listar_todos.return_value = [banco_1, banco_2]
+        banco_mock.return_value.listar_todos.return_value = [
+            mock.MagicMock(id=1, nome='Banco 1', codigo='101', imagem='imagem01.png'),
+            mock.MagicMock(id=2, nome='Banco 2', codigo='102', imagem='imagem02.png'),
+        ]
         configuracao = entidades.ConfiguracaoMeioPagamento(234)
         configuracao.configurado.should.be.falsy
 
@@ -91,8 +97,8 @@ class DepositoConfiguracaoMeioPagamento(unittest.TestCase):
     def test_deve_dizer_que_estah_configurado(self):
         configuracao = entidades.ConfiguracaoMeioPagamento(234)
         configuracao.json = [
-            {'numero_conta': '12322', 'favorecido': 'ZAS', 'imagem': 'imagem_1', 'nome': 'banco_1', 'operacao': None, 'poupanca': False, 'agencia': '1554', 'cpf_cnpj': '1234568', 'codigo': 'codigo_1', 'ativo': True},
-            {'numero_conta': None, 'favorecido': None, 'imagem': 'imagem_2', 'nome': 'banco_2', 'operacao': None, 'poupanca': False, 'agencia': None, 'cpf_cnpj': None, 'codigo': 'codigo_2', 'ativo': False}
+            {'id': '1', 'numero_conta': '12322', 'favorecido': 'ZAS', 'operacao': None, 'poupanca': False, 'agencia': '1554', 'cpf_cnpj': '1234568', 'ativo': True},
+            {'id': '2', 'numero_conta': None, 'favorecido': None, 'operacao': None, 'poupanca': False, 'agencia': None, 'cpf_cnpj': None, 'ativo': False}
         ]
         configuracao.configurado.should.be.truthy
 
@@ -101,8 +107,8 @@ class DepositoConfiguracaoMeioPagamento(unittest.TestCase):
     def test_operacao_nao_pode_none_se_banco_for_104(self):
         configuracao = entidades.ConfiguracaoMeioPagamento(234)
         configuracao.json = [
-            {'numero_conta': '12322', 'favorecido': 'ZAS', 'imagem': 'imagem_1', 'nome': 'banco_1', 'operacao': None, 'poupanca': False, 'agencia': '1554', 'cpf_cnpj': '1234568', 'codigo': '104', 'ativo': True},
-            {'numero_conta': None, 'favorecido': None, 'imagem': 'imagem_2', 'nome': 'banco_2', 'operacao': None, 'poupanca': False, 'agencia': None, 'cpf_cnpj': None, 'codigo': 'codigo_2', 'ativo': False}
+            {'id': '6', 'numero_conta': '12322', 'favorecido': 'ZAS', 'operacao': None, 'poupanca': False, 'agencia': '1554', 'cpf_cnpj': '1234568', 'ativo': True},
+            {'id': '1', 'numero_conta': None, 'favorecido': None, 'operacao': None, 'poupanca': False, 'agencia': None, 'cpf_cnpj': None, 'ativo': False}
         ]
         configuracao.configurado.should.be.falsy
 
@@ -111,46 +117,46 @@ class DepositoConfiguracaoMeioPagamento(unittest.TestCase):
     def test_banco_104_validar_operacao(self):
         configuracao = entidades.ConfiguracaoMeioPagamento(234)
         configuracao.json = [
-            {'numero_conta': '12322', 'favorecido': 'ZAS', 'imagem': 'imagem_1', 'nome': 'banco_1', 'operacao': '001', 'poupanca': False, 'agencia': '1554', 'cpf_cnpj': '1234568', 'codigo': '104', 'ativo': True},
-            {'numero_conta': None, 'favorecido': None, 'imagem': 'imagem_2', 'nome': 'banco_2', 'operacao': None, 'poupanca': False, 'agencia': None, 'cpf_cnpj': None, 'codigo': 'codigo_2', 'ativo': False}
+            {'numero_conta': '12322', 'favorecido': 'ZAS', 'operacao': '001', 'poupanca': False, 'agencia': '1554', 'cpf_cnpj': '1234568', 'ativo': True, 'id': 6},
+            {'numero_conta': None, 'favorecido': None, 'operacao': None, 'poupanca': False, 'agencia': None, 'cpf_cnpj': None, 'ativo': False, 'id': 3}
         ]
         configuracao.configurado.should.be.truthy
 
     @mock.patch('pagador_deposito.entidades.entidades.Banco', mock.MagicMock())
     @mock.patch('pagador_deposito.entidades.ConfiguracaoMeioPagamento.preencher_gateway', mock.MagicMock())
-    def test_deve_obter_banco_ativo(self):
+    def test_deve_obter_dados_deposito_ativo(self):
         configuracao = entidades.ConfiguracaoMeioPagamento(234)
         configuracao.json = [
             {'id': 1, 'numero_conta': '4444', 'favorecido': 'ZES', 'imagem': 'imagem_13', 'nome': 'banco_3', 'operacao': None, 'poupanca': False, 'agencia': '555', 'cpf_cnpj': '1234568897', 'codigo': '303', 'ativo': True},
-            {'id': 2, 'numero_conta': '12322', 'favorecido': 'ZAS', 'imagem': 'imagem_1', 'nome': 'banco_1', 'operacao': None, 'poupanca': False, 'agencia': '1554', 'cpf_cnpj': '1234568', 'codigo': 'codigo_1', 'ativo': True},
-            {'id': 3, 'numero_conta': None, 'favorecido': None, 'imagem': 'imagem_2', 'nome': 'banco_2', 'operacao': None, 'poupanca': False, 'agencia': None, 'cpf_cnpj': None, 'codigo': 'codigo_2', 'ativo': False}
+            {'id': 2, 'numero_conta': '12322', 'favorecido': 'ZAS', 'operacao': None, 'poupanca': False, 'agencia': '1554', 'cpf_cnpj': '1234568', 'ativo': True},
+            {'id': 3, 'numero_conta': None, 'favorecido': None, 'operacao': None, 'poupanca': False, 'agencia': None, 'cpf_cnpj': None, 'ativo': False}
         ]
-        configuracao.obter_banco_ativo('1').should.be.equal(configuracao.json[0])
+        configuracao.obter_dados_deposito_ativo('1').should.be.equal(configuracao.json[0])
 
     @mock.patch('pagador_deposito.entidades.entidades.Banco', mock.MagicMock())
     @mock.patch('pagador_deposito.entidades.ConfiguracaoMeioPagamento.preencher_gateway', mock.MagicMock())
-    def test_deve_obter_banco_ativo_retorna_erro_se_nao_for_ativo(self):
+    def test_deve_obter_dados_deposito_ativo_retorna_erro_se_nao_for_ativo(self):
         configuracao = entidades.ConfiguracaoMeioPagamento(234)
         configuracao.json = [
             {'id': 1, 'numero_conta': '4444', 'favorecido': 'ZES', 'imagem': 'imagem_13', 'nome': 'banco_3', 'operacao': None, 'poupanca': False, 'agencia': '555', 'cpf_cnpj': '1234568897', 'codigo': '303', 'ativo': True},
-            {'id': 2, 'numero_conta': '12322', 'favorecido': 'ZAS', 'imagem': 'imagem_1', 'nome': 'banco_1', 'operacao': None, 'poupanca': False, 'agencia': '1554', 'cpf_cnpj': '1234568', 'codigo': 'codigo_1', 'ativo': True},
-            {'id': 3, 'numero_conta': None, 'favorecido': None, 'imagem': 'imagem_2', 'nome': 'banco_2', 'operacao': None, 'poupanca': False, 'agencia': None, 'cpf_cnpj': None, 'codigo': 'codigo_2', 'ativo': False}
+            {'id': 2, 'numero_conta': '12322', 'favorecido': 'ZAS', 'operacao': None, 'poupanca': False, 'agencia': '1554', 'cpf_cnpj': '1234568', 'ativo': True},
+            {'id': 3, 'numero_conta': None, 'favorecido': None, 'operacao': None, 'poupanca': False, 'agencia': None, 'cpf_cnpj': None, 'ativo': False}
         ]
-        configuracao.obter_banco_ativo.when.called_with('3').should.throw(
+        configuracao.obter_dados_deposito_ativo.when.called_with('3').should.throw(
             entidades.ConfiguracaoBancoNaoEncontrada,
             u'Não foi encontrado um banco ativo com id 3 nas configuracoes da loja 234'
         )
 
     @mock.patch('pagador_deposito.entidades.entidades.Banco', mock.MagicMock())
     @mock.patch('pagador_deposito.entidades.ConfiguracaoMeioPagamento.preencher_gateway', mock.MagicMock())
-    def test_deve_obter_banco_ativo_retorna_erro_se_nao_achar(self):
+    def test_deve_obter_dados_deposito_ativo_retorna_erro_se_nao_achar(self):
         configuracao = entidades.ConfiguracaoMeioPagamento(234)
         configuracao.json = [
             {'id': 1, 'numero_conta': '4444', 'favorecido': 'ZES', 'imagem': 'imagem_13', 'nome': 'banco_3', 'operacao': None, 'poupanca': False, 'agencia': '555', 'cpf_cnpj': '1234568897', 'codigo': '303', 'ativo': True},
-            {'id': 2, 'numero_conta': '12322', 'favorecido': 'ZAS', 'imagem': 'imagem_1', 'nome': 'banco_1', 'operacao': None, 'poupanca': False, 'agencia': '1554', 'cpf_cnpj': '1234568', 'codigo': 'codigo_1', 'ativo': True},
-            {'id': 3, 'numero_conta': None, 'favorecido': None, 'imagem': 'imagem_2', 'nome': 'banco_2', 'operacao': None, 'poupanca': False, 'agencia': None, 'cpf_cnpj': None, 'codigo': 'codigo_2', 'ativo': False}
+            {'id': 2, 'numero_conta': '12322', 'favorecido': 'ZAS', 'operacao': None, 'poupanca': False, 'agencia': '1554', 'cpf_cnpj': '1234568', 'ativo': True},
+            {'id': 3, 'numero_conta': None, 'favorecido': None, 'operacao': None, 'poupanca': False, 'agencia': None, 'cpf_cnpj': None, 'ativo': False}
         ]
-        configuracao.obter_banco_ativo.when.called_with('4').should.throw(
+        configuracao.obter_dados_deposito_ativo.when.called_with('4').should.throw(
             entidades.ConfiguracaoBancoNaoEncontrada,
             u'Não foi encontrado um banco ativo com id 4 nas configuracoes da loja 234'
         )
@@ -188,7 +194,7 @@ class DepositoMontandoMalote(unittest.TestCase):
 
     def test_deve_montar_conteudo(self):
         dados = {'banco_id': '1'}
-        self.malote.configuracao.obter_banco_ativo.return_value = self.dados_json[0]
+        self.malote.configuracao.obter_dados_deposito_ativo.return_value = self.dados_json[0]
         self.malote.monta_conteudo(self.pedido, parametros_contrato=None, dados=dados)
         self.malote.to_dict().should.be.equal(
             {
@@ -200,7 +206,7 @@ class DepositoMontandoMalote(unittest.TestCase):
 
     def test_obter_email_conta(self):
         dados = {'banco_id': '1'}
-        self.malote.configuracao.obter_banco_ativo.return_value = self.dados_json[0]
+        self.malote.configuracao.obter_dados_deposito_ativo.return_value = self.dados_json[0]
         self.malote.configuracao.email_comprovante = None
         self.malote.monta_conteudo(self.pedido, parametros_contrato=None, dados=dados)
         self.malote.to_dict().should.be.equal(
@@ -217,7 +223,7 @@ class DepositoMontandoMalote(unittest.TestCase):
 
     def test_dah_erro_se_nao_achar_banco(self):
         dados = {'banco_id': '10'}
-        self.malote.configuracao.obter_banco_ativo.side_effect = entidades.ConfiguracaoBancoNaoEncontrada()
+        self.malote.configuracao.obter_dados_deposito_ativo.side_effect = entidades.ConfiguracaoBancoNaoEncontrada()
         self.malote.monta_conteudo.when.called_with(self.pedido, parametros_contrato=None, dados=dados).should.throw(
             entidades.DepositoInvalido,
             u'O banco id {} para o depósito do pedido {} não está ativo na loja {}.'.format(10, self.pedido.numero, self.loja_id)
