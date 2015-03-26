@@ -75,6 +75,8 @@ class ConfiguracaoMeioPagamento(entidades.ConfiguracaoMeioPagamento):
 
     @property
     def configurado(self):
+        if not self.json:
+            return False
         for banco in self.json:
             if self._banco_esta_configurado(banco):
                 return True
