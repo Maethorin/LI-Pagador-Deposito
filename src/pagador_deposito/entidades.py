@@ -60,25 +60,31 @@ class ConfiguracaoMeioPagamento(entidades.ConfiguracaoMeioPagamento):
         self.campos = ['ativo', 'email_comprovante', 'desconto', 'desconto_valor', 'informacao_complementar', 'aplicar_no_total', 'json']
         self.codigo_gateway = CODIGO_GATEWAY
         self.eh_gateway = True
-        self.bancos = []
         super(ConfiguracaoMeioPagamento, self).__init__(loja_id, codigo_pagamento, eh_listagem=eh_listagem)
+        self._bancos = []
+        if not self.json:
+            self.json = []
+        self._lista_bancos = entidades.Banco().listar_todos()
         if not self.eh_listagem:
             self.formulario = cadastro.FormularioDeposito()
-            lista_bancos = entidades.Banco().listar_todos()
             if not self.json:
-                self.json = []
-                for banco in lista_bancos:
+                for banco in self._lista_bancos:
                     banco_deposito = cadastro.BANCO_BASE.copy()
                     banco_deposito['id'] = banco.id
                     self.json.append(banco_deposito)
+
+    @property
+    def bancos(self):
+        if not self._bancos:
             for banco_deposito in self.json:
-                for banco in lista_bancos:
+                for banco in self._lista_bancos:
                     if banco.id == int(banco_deposito['id']):
                         _banco = banco_deposito.copy()
                         _banco['codigo'] = banco.codigo
                         _banco['nome'] = banco.nome
                         _banco['imagem'] = banco.imagem
-                        self.bancos.append(_banco)
+                        self._bancos.append(_banco)
+        return self._bancos
 
     @property
     def configurado(self):
