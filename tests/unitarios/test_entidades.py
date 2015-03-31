@@ -167,9 +167,6 @@ class DepositoMontandoMalote(unittest.TestCase):
         self.dados_json = [{
             'id': str(i),
             'ativo': i % 2 == 0,
-            'nome': 'Banco {}'.format(i),
-            'codigo': '{}{}{}'.format(i, i, i),
-            'imagem': 'imagem-{}.png'.format(i),
             'agencia': '3645',
             'numero_conta': '12345',
             'poupanca': False,
@@ -177,12 +174,18 @@ class DepositoMontandoMalote(unittest.TestCase):
             'operacao': None,
             'cpf_cnpj': '12345678901',
         } for i in range(1, 4)]
+        self.banco = mock.MagicMock(
+            nome='Banco Zas',
+            codigo='100',
+            imagem='imagem-zas.png'
+        )
         self.loja_id = 23
         self.malote = entidades.Malote(mock.MagicMock(loja_id=self.loja_id, json=self.dados_json, email_comprovante='email@comprovante.com', informacao_complementar='informacao_complementar'))
         self.pedido = mock.MagicMock()
         self.pedido.numero = 1234
         self.pedido.email_contato_loja = 'email@contato.com'
 
+    @mock.patch('pagador.entidades.Banco', mock.MagicMock())
     def test_deve_ter_propriedades(self):
         entidades.Malote('configuracao').to_dict().should.be.equal(
             {
@@ -192,35 +195,29 @@ class DepositoMontandoMalote(unittest.TestCase):
             }
         )
 
-    def test_deve_montar_conteudo(self):
+    @mock.patch('pagador.entidades.Banco')
+    def test_deve_montar_conteudo(self, banco_mock):
+        banco_mock.return_value = self.banco
         dados = {'banco_id': '1'}
         self.malote.configuracao.obter_dados_deposito_ativo.return_value = self.dados_json[0]
         self.malote.monta_conteudo(self.pedido, parametros_contrato=None, dados=dados)
-        self.malote.to_dict().should.be.equal(
-            {
-                'banco_agencia': '3645', 'banco_codigo': '111', 'banco_imagem': 'imagem-1.png', 'banco_nome': 'Banco 1',
-                'numero_conta': '12345', 'operacao': None, 'eh_poupanca': False, 'cpf_cnpj': '123.456.789-01',
-                'favorecido': 'Favorecido Nome 1', 'informacao_complementar': 'informacao_complementar', 'email_comprovante': 'email@comprovante.com'
-            }
-        )
+        self.malote.to_dict().should.be.equal({'banco_agencia': '3645', 'banco_codigo': '100', 'banco_imagem': 'imagem-zas.png', 'banco_nome': 'Banco Zas', 'cpf_cnpj': '123.456.789-01', 'eh_poupanca': False, 'email_comprovante': 'email@comprovante.com', 'favorecido': 'Favorecido Nome 1', 'informacao_complementar': 'informacao_complementar', 'numero_conta': '12345', 'operacao': None})
 
-    def test_obter_email_conta(self):
+    @mock.patch('pagador.entidades.Banco')
+    def test_obter_email_conta(self, banco_mock):
+        banco_mock.return_value = self.banco
         dados = {'banco_id': '1'}
         self.malote.configuracao.obter_dados_deposito_ativo.return_value = self.dados_json[0]
         self.malote.configuracao.email_comprovante = None
         self.malote.monta_conteudo(self.pedido, parametros_contrato=None, dados=dados)
-        self.malote.to_dict().should.be.equal(
-            {
-                'banco_agencia': '3645', 'banco_codigo': '111', 'banco_imagem': 'imagem-1.png', 'banco_nome': 'Banco 1',
-                'numero_conta': '12345', 'operacao': None, 'eh_poupanca': False, 'cpf_cnpj': '123.456.789-01',
-                'favorecido': 'Favorecido Nome 1', 'informacao_complementar': 'informacao_complementar', 'email_comprovante': 'email@contato.com'
-            }
-        )
+        self.malote.to_dict().should.be.equal({'banco_agencia': '3645', 'banco_codigo': '100', 'banco_imagem': 'imagem-zas.png', 'banco_nome': 'Banco Zas', 'cpf_cnpj': '123.456.789-01', 'eh_poupanca': False, 'email_comprovante': 'email@contato.com', 'favorecido': 'Favorecido Nome 1', 'informacao_complementar': 'informacao_complementar', 'numero_conta': '12345', 'operacao': None})
 
+    @mock.patch('pagador.entidades.Banco', mock.MagicMock())
     def test_dah_erro_se_nao_passar_banco_id(self):
         dados = {}
         self.malote.monta_conteudo.when.called_with(self.pedido, parametros_contrato=None, dados=dados).should.throw(entidades.DepositoInvalido, u'Não foi informado o banco para o depósito do pedido {} no dados.'.format(self.pedido.numero))
 
+    @mock.patch('pagador.entidades.Banco', mock.MagicMock())
     def test_dah_erro_se_nao_achar_banco(self):
         dados = {'banco_id': '10'}
         self.malote.configuracao.obter_dados_deposito_ativo.side_effect = entidades.ConfiguracaoBancoNaoEncontrada()
