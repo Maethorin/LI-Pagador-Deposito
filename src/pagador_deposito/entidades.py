@@ -6,10 +6,6 @@ from pagador_deposito import cadastro
 CODIGO_GATEWAY = 7
 
 
-class DepositoInvalido(Exception):
-    pass
-
-
 class Malote(entidades.Malote):
     def __init__(self, configuracao):
         super(Malote, self).__init__(configuracao)
@@ -29,11 +25,11 @@ class Malote(entidades.Malote):
         try:
             banco_id = dados['banco_id']
         except KeyError:
-            raise DepositoInvalido(u'Não foi informado o banco para o depósito do pedido {} no dados.'.format(pedido.numero))
+            raise self.DadosInvalidos(u'Não foi informado o banco para o depósito do pedido {} no dados.'.format(pedido.numero))
         try:
             dados_deposito = self.configuracao.obter_dados_deposito_ativo(banco_id)
         except ConfiguracaoBancoNaoEncontrada:
-            raise DepositoInvalido(u'O banco id {} para o depósito do pedido {} não está ativo na loja {}.'.format(banco_id, pedido.numero, self.configuracao.loja_id))
+            raise self.DadosInvalidos(u'O banco escolhido para o depósito do pedido não está mais ativo na loja.'.format(pedido.numero))
 
         self.email_comprovante = self.configuracao.email_comprovante
         if not self.email_comprovante:

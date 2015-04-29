@@ -215,13 +215,13 @@ class DepositoMontandoMalote(unittest.TestCase):
     @mock.patch('pagador.entidades.Banco', mock.MagicMock())
     def test_dah_erro_se_nao_passar_banco_id(self):
         dados = {}
-        self.malote.monta_conteudo.when.called_with(self.pedido, parametros_contrato=None, dados=dados).should.throw(entidades.DepositoInvalido, u'Não foi informado o banco para o depósito do pedido {} no dados.'.format(self.pedido.numero))
+        self.malote.monta_conteudo.when.called_with(self.pedido, parametros_contrato=None, dados=dados).should.throw(self.malote.DadosInvalidos, u'Não foi informado o banco para o depósito do pedido {} no dados.'.format(self.pedido.numero))
 
     @mock.patch('pagador.entidades.Banco', mock.MagicMock())
     def test_dah_erro_se_nao_achar_banco(self):
         dados = {'banco_id': '10'}
         self.malote.configuracao.obter_dados_deposito_ativo.side_effect = entidades.ConfiguracaoBancoNaoEncontrada()
         self.malote.monta_conteudo.when.called_with(self.pedido, parametros_contrato=None, dados=dados).should.throw(
-            entidades.DepositoInvalido,
-            u'O banco id {} para o depósito do pedido {} não está ativo na loja {}.'.format(10, self.pedido.numero, self.loja_id)
+            self.malote.DadosInvalidos,
+            u'O banco escolhido para o depósito do pedido não está mais ativo na loja.'.format(self.pedido.numero)
         )
