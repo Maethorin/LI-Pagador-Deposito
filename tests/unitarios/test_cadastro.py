@@ -56,13 +56,13 @@ class FormularioDeposito(unittest.TestCase):
 
 class ValidadorBancos(unittest.TestCase):
     def test_deve_adicionar_erro_se_nao_for_lista(self):
-        validador = cadastro.BancosValidador(valor='nao-eh-lista')
+        validador = cadastro.BancosValidador(valor='nao-eh-lista', valores={})
         validador.eh_valido.should.be.equal(False)
         validador.erros.should.contain('lista')
         validador.erros['lista'].should.be.equal('Os bancos devem ser uma lista.')
 
     def test_deve_adicionar_erro_para_atributos_faltando(self):
-        validador = cadastro.BancosValidador(valor=['faltando'])
+        validador = cadastro.BancosValidador(valor=['faltando'], valores={})
         validador.eh_valido.should.be.equal(False)
         validador.erros.should.be.equal({
             'atributos': [
@@ -78,33 +78,33 @@ class ValidadorBancos(unittest.TestCase):
         })
 
     def test_deve_ser_valido_se_conter_todos_os_atributos(self):
-        validador = cadastro.BancosValidador(valor=[cadastro.BANCO_BASE.copy()])
+        validador = cadastro.BancosValidador(valor=[cadastro.BANCO_BASE.copy()], valores={})
         validador.eh_valido.should.be.equal(True)
         validador.erros.should.be.empty
 
 
 class ValidarDesconto(unittest.TestCase):
     def test_deve_validar_maior_que_100(self):
-        validador = cadastro.DescontoValidador(valor='123.94')
+        validador = cadastro.DescontoValidador(valor='123.94', valores={})
         validador.eh_valido.should.be.equal(False)
         validador.erros.should.be.equal(u'Porcentagem inválida. Insira um valor entre 0% e 100%.')
 
     def test_deve_validar_menor_que_0(self):
-        validador = cadastro.DescontoValidador(valor='-0.5')
+        validador = cadastro.DescontoValidador(valor='-0.5', valores={})
         validador.eh_valido.should.be.equal(False)
         validador.erros.should.be.equal(u'Porcentagem inválida. Insira um valor entre 0% e 100%.')
 
     def test_deve_validar_none(self):
-        validador = cadastro.DescontoValidador(valor=None)
+        validador = cadastro.DescontoValidador(valor=None, valores={})
         validador.eh_valido.should.be.equal(False)
         validador.erros.should.be.equal(u'Porcentagem inválida. Insira um valor entre 0% e 100%.')
 
     def test_deve_validar_se_valor_gerar_value_error(self):
-        validador = cadastro.DescontoValidador(valor='asdds')
+        validador = cadastro.DescontoValidador(valor='asdds', valores={})
         validador.eh_valido.should.be.equal(False)
         validador.erros.should.be.equal(u'Porcentagem inválida. Insira um valor entre 0% e 100%.')
 
     def test_deve_retornar_ok_se_valor_for_certo(self):
-        validador = cadastro.DescontoValidador(valor='50.43444')
+        validador = cadastro.DescontoValidador(valor='50.43444', valores={})
         validador.eh_valido.should.be.equal(True)
         validador.erros.should.be.empty
