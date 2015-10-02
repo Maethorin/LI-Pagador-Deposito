@@ -60,11 +60,14 @@ class ConfiguracaoMeioPagamento(entidades.ConfiguracaoMeioPagamento):
         self.campos = ['ativo', 'email_comprovante', 'desconto', 'desconto_valor', 'informacao_complementar', 'aplicar_no_total', 'json']
         self.codigo_gateway = CODIGO_GATEWAY
         self.eh_gateway = True
-        super(ConfiguracaoMeioPagamento, self).__init__(loja_id, codigo_pagamento, eh_listagem=eh_listagem)
+        self.modos_pagamento_aceitos = {
+            'bancos': [],
+        }
         self._bancos = []
+        self._lista_bancos = entidades.Banco().listar_todos()
+        super(ConfiguracaoMeioPagamento, self).__init__(loja_id, codigo_pagamento, eh_listagem=eh_listagem)
         if not self.json:
             self.json = []
-        self._lista_bancos = entidades.Banco().listar_todos()
         if not self.eh_listagem:
             self.formulario = cadastro.FormularioDeposito()
             if not self.json:
@@ -72,7 +75,6 @@ class ConfiguracaoMeioPagamento(entidades.ConfiguracaoMeioPagamento):
                     banco_deposito = cadastro.BANCO_BASE.copy()
                     banco_deposito['id'] = banco.id
                     self.json.append(banco_deposito)
-        self._atualiza_meios_pagamento()
 
     @property
     def bancos(self):
@@ -96,10 +98,11 @@ class ConfiguracaoMeioPagamento(entidades.ConfiguracaoMeioPagamento):
                 return True
         return False
 
-    def _atualiza_meios_pagamento(self):
+    def atualiza_meios_pagamento(self):
         for banco in self.json:
             if self._banco_esta_configurado(banco):
-                self.modos_pagamento_aceitos['bancos'].append(self.formatador.slugify(banco.nome))
+                banco_nome = [_banco['nome'] for _banco in self.bancos if banco['id'] == _banco['id']][0]
+                self.modos_pagamento_aceitos['bancos'].append(self.formatador.slugify(banco_nome))
 
     def obter_dados_deposito_ativo(self, banco_id):
         for banco in self.json:
