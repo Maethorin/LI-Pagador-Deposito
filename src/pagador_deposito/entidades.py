@@ -52,6 +52,9 @@ class ConfiguracaoBancoNaoEncontrada(Exception):
 
 
 class ConfiguracaoMeioPagamento(entidades.ConfiguracaoMeioPagamento):
+    modos_pagamento_aceitos = {
+        'bancos': [],
+    }
 
     def __init__(self, loja_id, codigo_pagamento=None, eh_listagem=False):
         self.campos = ['ativo', 'email_comprovante', 'desconto', 'desconto_valor', 'informacao_complementar', 'aplicar_no_total', 'json']
@@ -69,6 +72,7 @@ class ConfiguracaoMeioPagamento(entidades.ConfiguracaoMeioPagamento):
                     banco_deposito = cadastro.BANCO_BASE.copy()
                     banco_deposito['id'] = banco.id
                     self.json.append(banco_deposito)
+        self._atualiza_meios_pagamento()
 
     @property
     def bancos(self):
@@ -91,6 +95,11 @@ class ConfiguracaoMeioPagamento(entidades.ConfiguracaoMeioPagamento):
             if self._banco_esta_configurado(banco):
                 return True
         return False
+
+    def _atualiza_meios_pagamento(self):
+        for banco in self.json:
+            if self._banco_esta_configurado(banco):
+                self.modos_pagamento_aceitos['bancos'].append(self.formatador.slugify(banco.nome))
 
     def obter_dados_deposito_ativo(self, banco_id):
         for banco in self.json:
