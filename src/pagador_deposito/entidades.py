@@ -99,6 +99,8 @@ class ConfiguracaoMeioPagamento(entidades.ConfiguracaoMeioPagamento):
         return False
 
     def atualiza_meios_pagamento(self):
+        if not self.json:
+            return
         for banco in self.json:
             if self._banco_esta_configurado(banco):
                 banco_nome = [_banco['nome'] for _banco in self.bancos if banco['id'] == _banco['id']][0]
