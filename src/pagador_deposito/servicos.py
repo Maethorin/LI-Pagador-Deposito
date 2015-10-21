@@ -9,4 +9,4 @@ class EntregaPagamento(servicos.EntregaPagamento):
 
     def processa_dados_pagamento(self):
         self.dados_enviados = self.malote.to_dict()
-        self.resultado = {'dados': self.dados_enviados}
+        self.resultado = {'dados': self.dados_enviados, 'pago': True}
